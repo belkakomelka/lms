@@ -1,0 +1,148 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="lms-1" author="kamilya">
+        <createTable tableName="users">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="user_token" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="lms-2" author="kamilya">
+        <createTable tableName="course">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="text">
+            </column>
+            <column name="tags" type="jsonb">
+            </column>
+            <column name="achievement_id" type="int">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="lms-3" author="kamilya">
+        <createTable tableName="module">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="course_id" type="int">
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="varchar(255)">
+            </column>
+            <column name="link_to_video" type="text">
+            </column>
+            <column name="achievement_id" type="int">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="lms-4" author="kamilya">
+        <createTable tableName="users_to_module">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="users_id" type="bigint">
+            </column>
+            <column name="module_id" type="bigint">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="lms-5" author="kamilya">
+        <createTable tableName="achievement">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="score" type="int">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="lms-6" author="kamilya">
+        <createTable tableName="users_to_achievement">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="users_id" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="achievement_id" type="int">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="lms-7" author="kamilya">
+        <createSequence sequenceName="sequence_users" startValue="1"/>
+    </changeSet>
+
+
+    <changeSet id="lms-8" author="kamilya">
+        <createSequence sequenceName="sequence_course" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="lms-9" author="kamilya">
+        <createSequence sequenceName="sequence_module" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="lms-10" author="kamilya">
+        <createSequence sequenceName="sequence_users_to_module" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="lms-11" author="kamilya">
+        <createSequence sequenceName="sequence_achievement" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="lms-12" author="kamilya">
+        <createSequence sequenceName="sequence_users_to_achievement" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="lms-13" author="kamilya">
+        <addForeignKeyConstraint constraintName="fk_users_to_module"
+                                 baseTableName="users_to_module"
+                                 baseColumnNames="users_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="lms-14" author="kamilya">
+        <addForeignKeyConstraint constraintName="fk_module_to_users"
+                                 baseTableName="users_to_module"
+                                 baseColumnNames="module_id"
+                                 referencedTableName="module"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="lms-15" author="kamilya">
+        <addForeignKeyConstraint constraintName="fk_users_to_achievement"
+                                 baseTableName="users_to_achievement"
+                                 baseColumnNames="users_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="lms-16" author="kamilya">
+        <addForeignKeyConstraint constraintName="fk_achievement_to_users"
+                                 baseTableName="users_to_achievement"
+                                 baseColumnNames="achievement_id"
+                                 referencedTableName="achievement"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

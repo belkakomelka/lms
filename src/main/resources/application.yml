@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1234
+    url: jdbc:postgresql://localhost:5432/lms
+    platform: postgres
+    initialization-mode: always
+    continue-on-error: true
+    hikari:
+      schema: lms
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+  jpa:
+    show-sql: true
+    database: postgresql
+    properties:
+      hibernate:
+        generate_statistics: false
