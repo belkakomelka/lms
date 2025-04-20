@@ -40,7 +40,7 @@ public class Course {
     Set<String> tags = new HashSet<>();
 
     @OneToOne
-    @Column(name = "achievement_id")
+    @JoinColumn(name = "achievement_id")
     Achievement achievement;
 
     @Builder.Default
@@ -48,5 +48,5 @@ public class Course {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
-    private List<Module> modules = new ArrayList<>();
+    private List<ModuleCourse> modules = new ArrayList<>();
 }

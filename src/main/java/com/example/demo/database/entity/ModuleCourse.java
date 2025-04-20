@@ -16,14 +16,14 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Module {
+public class ModuleCourse {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "sequence_module")
     @SequenceGenerator(name = "sequence_module", sequenceName = "sequence_module", allocationSize = 1)
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "course_id")
+    @JoinColumn(name = "course_id")
     Course course;
 
     @Column(name = "name", nullable=false)
@@ -40,6 +40,6 @@ public class Module {
     Set<UserToModule> moduleRelationToUser = new HashSet<>();
 
     @OneToOne
-    @Column(name = "achievement_id")
+    @JoinColumn(name = "achievement_id")
     Achievement achievement;
 }
