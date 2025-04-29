@@ -24,6 +24,6 @@ public class UserToAchievement {
     Achievement achievement;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "users_id")
     User user;
 }

@@ -27,28 +27,28 @@ public class AddUserService {
     @Transactional
     public ResponseEntity<String> addUser(UserRegistrationRq userRegistrationRq, String rqUid){
         try {
-            log.info("Принят запрос для сохранения нового участника " + objectMapping.writeValueAsString(userRegistrationRq) + ", rqUid = " + rqUid);
+            log.info(String.format("Принят запрос для сохранения нового участника %s, rqUid = %s", objectMapping.writeValueAsString(userRegistrationRq), rqUid));
 
-            Optional<User> userOptional = userRepository.findUserByUserToken(userRegistrationRq.getUserToken());
+            Optional<User> userOptional = userRepository.findUserByUserToken(userRegistrationRq.getUserId());
             User user;
             if (userOptional.isPresent()){
                 user = userOptional.get();
-                log.info("Данный пользователь уже зарегистрирован в системе " + userRegistrationRq.getUserToken() + ", rqUid = " + rqUid);
+                log.info(String.format("Данный пользователь уже зарегистрирован в системе %s, rqUid = %s", userRegistrationRq.getUserId(), rqUid));
             } else{
-                log.info("Пользователь отсутствует, rqUid = " + rqUid);
+                log.info(String.format("Пользователь отсутствует, rqUid = %s", rqUid));
                 user = buildUser(userRegistrationRq);
                 userRepository.save(user);
             }
             return new ResponseEntity<>(objectMapping.writeValueAsString(buildRs(user)), HttpStatus.OK);
         } catch (JsonProcessingException | RuntimeException | NoSuchAlgorithmException e) {
-            log.error("Внутрення ошибка сервиса " + e.getMessage() + ", rqUid = " + rqUid);
+            log.error(String.format("Внутрення ошибка сервиса  %s, rqUid = %s", e.getMessage(), rqUid));
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     private User buildUser(UserRegistrationRq userRegistrationRq) throws NoSuchAlgorithmException {
         return  User.builder()
-                .userToken(userRegistrationRq.getUserToken())
+                .userToken(userRegistrationRq.getUserId())
                 .build();
     }
 

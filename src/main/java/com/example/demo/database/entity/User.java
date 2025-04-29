@@ -34,5 +34,5 @@ public class User {
 
     @Builder.Default
     @OneToMany(mappedBy = "user")
-    Set<UserToAchievement> userRelationToProduct = new HashSet<>();
+    Set<UserToAchievement> userRelationToAchievement = new HashSet<>();
 }

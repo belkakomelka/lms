@@ -1,27 +1,29 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.user.UserGetRq;
 import com.example.demo.dto.user.UserRegistrationRq;
 import com.example.demo.service.user.AddUserService;
 import com.example.demo.service.user.GetUserInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@Slf4j
 @RequiredArgsConstructor
+@RestController
+@RequestMapping("/lms/v1")
+@Validated
 public class UserController {
 
-    @Autowired
-    AddUserService addUserService;
+    private final AddUserService addUserService;
 
-    @Autowired
-    GetUserInfoService getUserInfoService;
+    private final GetUserInfoService getUserInfoService;
 
     @PostMapping("/add-user")
-    public ResponseEntity<String> addUser(@RequestBody UserRegistrationRq userRegistrationRq,
+    public ResponseEntity<String> addUser(@RequestBody @Valid UserRegistrationRq userRegistrationRq,
                                           @RequestHeader String rqUid) {
         return addUserService.addUser(userRegistrationRq, rqUid);
     }
@@ -32,8 +34,4 @@ public class UserController {
                                           @RequestHeader String rqUid) {
         return getUserInfoService.getUser(id, rqUid);
     }
-
-
-
-    // todo Valid+RestControllerAdvice
 }

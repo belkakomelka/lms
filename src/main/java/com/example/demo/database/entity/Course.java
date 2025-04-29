@@ -35,9 +35,13 @@ public class Course {
     String description;
 
     @Builder.Default
-    @Type(value = JsonType.class)
-    @Column(name = "tags")
-    Set<String> tags = new HashSet<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "course_to_tags",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "achievement_id")
@@ -49,4 +53,7 @@ public class Course {
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<ModuleCourse> modules = new ArrayList<>();
+
+    @Column(name = "completion_percentage")
+    Integer percentageOfCompletion;
 }

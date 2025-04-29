@@ -23,6 +23,7 @@
             <column name="description" type="text">
             </column>
             <column name="tags" type="jsonb">
+<!--                todo убрать джсонб -->
             </column>
             <column name="achievement_id" type="int">
             </column>
@@ -145,4 +146,42 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="lms-17" author="kamilya">
+        <addColumn tableName="course">
+            <column name="completion_percentage" type="int"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="lms-18" author="kamilya">
+        <createTable tableName="tags">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="code" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="lms-19" author="kamilya">
+        <createTable tableName="course_to_tags">
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_tag_to_course"
+                             referencedTableName="tags" referencedColumnNames="id"/>
+            </column>
+            <column name="course_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_course_to_tag"
+                             referencedTableName="course" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="course_to_tags" columnNames="tag_id, course_id"/>
+    </changeSet>
+
+    <changeSet id="lms-20" author="kamilya">
+        <createSequence sequenceName="sequence_tags" startValue="1"/>
+    </changeSet>
 </databaseChangeLog>
