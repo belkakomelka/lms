@@ -35,4 +35,8 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user")
     Set<UserToAchievement> userRelationToAchievement = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    Set<UserToCourse> userRelationToCourse = new HashSet<>();
 }

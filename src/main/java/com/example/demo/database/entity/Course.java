@@ -54,6 +54,7 @@ public class Course {
             fetch = FetchType.LAZY)
     private List<ModuleCourse> modules = new ArrayList<>();
 
-    @Column(name = "completion_percentage")
-    Integer percentageOfCompletion;
+    @Builder.Default
+    @OneToMany(mappedBy = "course")
+    Set<UserToCourse> courseRelationToUser = new HashSet<>();
 }

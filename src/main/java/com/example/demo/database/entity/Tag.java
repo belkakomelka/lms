@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "course")
+@Table(name = "tags")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @AllArgsConstructor
@@ -31,7 +31,7 @@ public class Tag {
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "code", nullable = false)
+    @Column(name = "code")
     Integer code;
 
     @Builder.Default

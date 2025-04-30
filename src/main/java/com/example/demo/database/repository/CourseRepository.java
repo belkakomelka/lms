@@ -5,17 +5,19 @@ import org.hibernate.query.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Set;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("""
     SELECT DISTINCT c FROM Course c
-    LEFT JOIN c.tags t
-    LEFT JOIN UserCourseProgress ucp ON ucp.course.id = c.id
-    WHERE (:userId IS NULL OR ucp.user.id = :userId)
+    LEFT JOIN FETCH c.tags t
+    LEFT JOIN c.courseRelationToUser crtu
+    LEFT JOIN crtu.user u
+    WHERE (:userId IS NULL OR u.userToken = :userId)
     AND (:tags IS NULL OR t.name IN :tags)
-    GROUP BY c
     """)
     List<Course> findCoursesByFilters(
             @Param("userId") String userId,
