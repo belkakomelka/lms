@@ -35,6 +35,7 @@ public class GetUserInfoService {
                 log.info(String.format("Пользователь был найден, rqUid = %s", rqUid));
             } else{
                 log.info(String.format("Пользователь отсутствует или информация не найдена, rqUid = %s", rqUid));
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(objectMapping.writeValueAsString(user), HttpStatus.OK);
         } catch (JsonProcessingException | RuntimeException e) {

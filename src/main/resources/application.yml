@@ -3,19 +3,21 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: 1234
-    url: jdbc:postgresql://localhost:5432/lms
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://db:5432/lms?currentSchema=lms
     platform: postgres
-    initialization-mode: always
     continue-on-error: true
     hikari:
       schema: lms
   liquibase:
     change-log: classpath:db/changelog/changelog.xml
+    default-schema: lms
+    liquibase-schema: lms
   jpa:
     show-sql: true
     database: postgresql
     properties:
       hibernate:
         generate_statistics: false
+        default_schema: lms
