@@ -1,0 +1,110 @@
+openapi: 3.0.1
+info:
+  title: LMS
+  description: API для взаимодействия с LMS
+  version: 1.0.0
+servers:
+  - url: 'lms/v1'
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      description: Добавление пользователя в БД
+      parameters:
+        - name: rqUid
+          in: header
+          description: ''
+          required: true
+          schema:
+            type: string
+          example: 30f14c6c1fc85cba12bfd093aa8f90e3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegistrationRq"
+      responses:
+        '200':
+          description: Пользователь сохранен в базу успешно
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserGetRs"
+        '400':
+          description: Запрос не прошел валидацию
+        '500':
+          description: Внутренняя ошибка сервера
+  /user/achievements/{userId}:
+    get:
+      tags:
+        - user
+      description: Получение наград пользователя по userId из базы данных
+      parameters:
+        - name: userId
+          in: path
+          description: userId пользователя
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetAchievementsRs'
+        '204':
+          description: Отсутствуют достижения пользователя
+        '400':
+          description: Запрос не прошел валидацию
+        '404':
+          description: Пользователь не был найден в базе данных
+        '500':
+          description: Внутренняя ошибка сервера
+components:
+  schemas:
+    UserRegistrationRq:
+      type: object
+      properties:
+        userId:
+          type: string
+          nullable: false
+          maximum: 255
+    UserGetRs:
+      type: object
+      properties:
+        id:
+          type: int64
+          example: 1
+    UserGetAchievementsRs:
+      type: object
+      properties:
+        id:
+          type: int64
+          example: 1
+        userToken:
+          type: string
+          example: userToken1
+          maximum: 255
+        achievements:
+          type: array
+          items:
+            type: object
+            properties:
+              score:
+                type: integer
+                example: 100
+              name:
+                type: string
+                example: Прошел курс лабубу
+              id:
+                type: integer
+                format: int64
+                example: 123
+            required:
+              - score
+              - name
+              - id
+

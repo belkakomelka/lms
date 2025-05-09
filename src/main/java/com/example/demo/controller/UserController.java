@@ -22,16 +22,16 @@ public class UserController {
 
     private final GetUserInfoService getUserInfoService;
 
-    @PostMapping("/add-user")
+    @PostMapping("/user")
     public ResponseEntity<String> addUser(@RequestBody @Valid UserRegistrationRq userRegistrationRq,
                                           @RequestHeader String rqUid) {
         return addUserService.addUser(userRegistrationRq, rqUid);
     }
 
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<String> getUser(@PathVariable("id") Long id,
+    @GetMapping("/user/achievements/{userId}")
+    public ResponseEntity<String> getUser(@PathVariable("userId") String userId,
                                           @RequestHeader String rqUid) {
-        return getUserInfoService.getUser(id, rqUid);
+        return getUserInfoService.getUserAchievements(userId, rqUid);
     }
 }
