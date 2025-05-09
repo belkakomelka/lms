@@ -28,7 +28,6 @@ public class AddUserService {
     public ResponseEntity<String> addUser(UserRegistrationRq userRegistrationRq, String rqUid){
         try {
             log.info(String.format("Принят запрос для сохранения нового участника %s, rqUid = %s", objectMapping.writeValueAsString(userRegistrationRq), rqUid));
-
             Optional<User> userOptional = userRepository.findUserByUserToken(userRegistrationRq.getUserId());
             User user;
             if (userOptional.isPresent()){

@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
     private final GetCourseService getCourseService;
     @PostMapping("/get-course")
-    public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq){
-        return getCourseService.getCourse(courseGetRq);
+    public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
+                                               @RequestHeader String rqUid){
+        return getCourseService.getCourse(courseGetRq, rqUid);
     }
 
 }

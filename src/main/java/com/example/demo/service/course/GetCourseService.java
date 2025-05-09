@@ -28,10 +28,15 @@ public class GetCourseService {
     private final ObjectMapper objectMapping;
 
     @Transactional
-    public ResponseEntity<String> getCourse(CourseGetRq courseGetRq) {
+    public ResponseEntity<String> getCourse(CourseGetRq courseGetRq, String rqUid) {
         try{
+            log.info(String.format("Принят запрос для получения курсов, rqUid = %s", objectMapping.writeValueAsString(courseGetRq), rqUid));
             CourseGetFiltersRq filters = courseGetRq.getCourseGetFiltersRq();
             List<Course> courses = courseRepository.findCoursesByFilters(filters.getUserId(), filters.getTags());
+            if (filters.getUserId() != null && (courses == null || courses.isEmpty())){
+                log.info(String.format("У пользователя с userId = %s нет активных курсов, rqUid = %s", filters.getUserId(), rqUid));
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             return new ResponseEntity<>(objectMapping.writeValueAsString(buildRs(courses)), HttpStatus.OK);
         } catch (JsonProcessingException e){
             log.error(e.getMessage());
