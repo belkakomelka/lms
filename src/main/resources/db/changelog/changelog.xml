@@ -219,7 +219,7 @@
     
     <changeSet id="lms-25" author="kamilya">
         <addColumn tableName="course">
-            <column>link_to_photo type="text"</column>
+            <column name="link_to_photo" type="text" />
         </addColumn>
     </changeSet>
 
