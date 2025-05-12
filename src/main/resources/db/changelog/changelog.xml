@@ -216,5 +216,11 @@
     <changeSet id="lms-24" author="kamilya">
         <createSequence sequenceName="sequence_users_to_course" startValue="1"/>
     </changeSet>
+    
+    <changeSet id="lms-25" author="kamilya">
+        <addColumn tableName="course">
+            <column>link_to_photo type="text"</column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

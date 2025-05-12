@@ -10,10 +10,6 @@ import java.util.Set;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UploadCourseRq {
-    String name;
-
-    String description;
-
-    Set<String> tags;
+public class CourseUploadRs {
+    Long id;
 }

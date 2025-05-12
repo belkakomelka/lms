@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
@@ -22,4 +23,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findCoursesByFilters(
             @Param("userId") String userId,
             @Param("tags") Set<String> tags);
+
+    Optional<Course> findByName(String name);
 }

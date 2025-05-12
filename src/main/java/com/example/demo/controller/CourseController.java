@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.course.CourseGetRq;
-import com.example.demo.dto.course.UploadCourseRq;
-import com.example.demo.dto.user.UserRegistrationRq;
+import com.example.demo.dto.course.CourseUploadRq;
 import com.example.demo.service.course.GetCourseService;
 import com.example.demo.service.course.UploadCourseService;
 import jakarta.validation.Valid;
@@ -27,9 +26,9 @@ public class CourseController {
     }
 
     @PostMapping(path = "/course", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<String> uploadCourse(@RequestPart("data") UploadCourseRq uploadCourseRq,  // todo потом валид
+    public ResponseEntity<String> uploadCourse(@RequestPart("uploadCourseRq") @Valid CourseUploadRq courseUploadRq,
                                                @RequestPart("photo") MultipartFile photo,
                                                @RequestHeader String rqUid){
-        return uploadCourseService.upload(uploadCourseRq, photo, rqUid);
+        return uploadCourseService.upload(courseUploadRq, photo, rqUid);
     }
 }
