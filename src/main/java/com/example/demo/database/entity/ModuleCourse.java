@@ -42,4 +42,7 @@ public class ModuleCourse {
     @OneToOne
     @JoinColumn(name = "achievement_id")
     Achievement achievement;
+
+    @Column(name = "order", nullable = false)
+    Integer order;
 }

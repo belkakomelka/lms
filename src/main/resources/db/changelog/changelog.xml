@@ -43,6 +43,8 @@
             </column>
             <column name="achievement_id" type="int">
             </column>
+            <column name="order" type="int">
+            </column>
         </createTable>
     </changeSet>
 
@@ -54,6 +56,9 @@
             <column name="users_id" type="bigint">
             </column>
             <column name="module_id" type="bigint">
+            </column>
+            <column name="is_complete" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
             </column>
         </createTable>
     </changeSet>

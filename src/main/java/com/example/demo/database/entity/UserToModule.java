@@ -26,4 +26,7 @@ public class UserToModule {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     User user;
+
+    @Column(name = "is_complete")
+    Boolean isComplete;
 }

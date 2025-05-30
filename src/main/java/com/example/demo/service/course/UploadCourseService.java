@@ -38,16 +38,21 @@ public class UploadCourseService {
             Optional<Course> courseOptional = courseRepository.findByName(courseUploadRq.getName());
             Course course;
             if (courseOptional.isPresent()){
-                log.info(String.format("Данный курс уже есть на платформе, rqUid = %s", rqUid)); // todo апдейт отдельной ручкой
-                course = courseOptional.get();
+                log.info(String.format("Данный курс уже есть на платформе, rqUid = %s", rqUid));
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
             } else{
                 log.info(String.format("Данный курс новый, rqUid = %s", rqUid));
                 String linkToPhoto = fileUploadService.uploadPhoto(photo);
+                log.info(String.format("Происходит создание карточки, rqUid = %s", rqUid));
                 course = buildCourse(courseUploadRq, linkToPhoto);
                 courseRepository.save(course);
+                log.info(String.format("Карточка курса сохранена, rqUid = %s", rqUid));
             }
-            return new ResponseEntity<>(objectMapping.writeValueAsString(buildRs(course)), HttpStatus.OK);
+            String uploadRs = objectMapping.writeValueAsString(buildRs(course));
+            log.info(String.format("Отправлен ответ на запрос для создания курса, тело ответа: %s, rqUid = %s", uploadRs, rqUid));
+            return new ResponseEntity<>(uploadRs, HttpStatus.OK);
         } catch (Exception e) {
+            log.error(String.format("Карточка курса не может быть создана, rqUid = %s", rqUid));
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
