@@ -56,6 +56,7 @@ public class Course {
 
     @Builder.Default
     @OneToMany(mappedBy = "course")
+    @OrderBy("order ASC")
     Set<UserToCourse> courseRelationToUser = new HashSet<>();
 
     @Column(name = "link_to_photo")

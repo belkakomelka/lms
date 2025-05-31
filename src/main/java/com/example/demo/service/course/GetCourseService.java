@@ -2,7 +2,10 @@ package com.example.demo.service.course;
 
 import com.example.demo.database.entity.Course;
 import com.example.demo.database.entity.Tag;
+import com.example.demo.database.entity.User;
+import com.example.demo.database.entity.UserToCourse;
 import com.example.demo.database.repository.CourseRepository;
+import com.example.demo.database.repository.UserRepository;
 import com.example.demo.dto.course.CourseGetFiltersRq;
 import com.example.demo.dto.course.CourseGetRq;
 import com.example.demo.dto.course.CourseGetRs;
@@ -14,8 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +29,8 @@ public class GetCourseService {
 
     private final CourseRepository courseRepository;
 
+    private final UserRepository userRepository;
+
     private final ObjectMapper objectMapping;
 
     @Transactional
@@ -32,10 +38,16 @@ public class GetCourseService {
         try{
             log.info(String.format("Принят запрос для получения курсов, rqUid = %s", objectMapping.writeValueAsString(courseGetRq), rqUid));
             CourseGetFiltersRq filters = courseGetRq.getCourseGetFiltersRq();
-            List<Course> courses = courseRepository.findCoursesByFilters(filters.getUserId(), filters.getTags());
-            if (filters.getUserId() != null && (courses == null || courses.isEmpty())){
-                log.info(String.format("У пользователя с userId = %s нет активных курсов, rqUid = %s", filters.getUserId(), rqUid));
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            String userToken = filters.getUserId();
+            Optional<User> userOptional = userRepository.findUserByUserToken(userToken); // todo нужно фильтровать по id user тут нужно немного переделать
+            List<Course> courses = courseRepository.findCoursesByFilters(userToken, filters.getTags());
+            if (filters.getUserId() != null){
+                if (courses == null || courses.isEmpty()) { // todo refactor
+                    log.info(String.format("У пользователя с userId = %s нет активных курсов, rqUid = %s", filters.getUserId(), rqUid));
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                } else{
+                    return new ResponseEntity<>(objectMapping.writeValueAsString(buildRs(courses, courseGetRq.getCourseGetFiltersRq().getUserId())), HttpStatus.OK);
+                }
             }
             return new ResponseEntity<>(objectMapping.writeValueAsString(buildRs(courses)), HttpStatus.OK);
         } catch (JsonProcessingException e){
@@ -48,9 +60,7 @@ public class GetCourseService {
         List<com.example.demo.dto.course.Course> courseDtos = courses.stream()
                 .map(c -> com.example.demo.dto.course.Course.builder()
                         .name(c.getName())
-                        .tags(c.getTags().stream()
-                                .map(Tag::getName)
-                                .collect(Collectors.toSet()))
+                        .tags(mapTagNames(c.getTags()))
                         .description(c.getDescription())
                         .build())
                 .collect(Collectors.toList());
@@ -58,5 +68,34 @@ public class GetCourseService {
         return CourseGetRs.builder()
                 .courses(courseDtos)
                 .build();
+    }
+
+    public CourseGetRs buildRs(List<Course> courses, String userId) {
+        List<com.example.demo.dto.course.Course> courseDtos = courses.stream()
+                .map(c -> com.example.demo.dto.course.Course.builder()
+                            .name(c.getName())
+                            .tags(mapTagNames(c.getTags()))
+                            .description(c.getDescription())
+                            .completion_percentage(getCompletionPercentage(c, userId))
+                            .build()
+                ).collect(Collectors.toList());
+
+        return CourseGetRs.builder()
+                .courses(courseDtos)
+                .build();
+    }
+
+    private Set<String> mapTagNames(Set<Tag> tags) {
+        return tags.stream()
+                .map(Tag::getName)
+                .collect(Collectors.toSet());
+    }
+
+    private Integer getCompletionPercentage(Course course, String userId) {
+        return course.getCourseRelationToUser().stream()
+                .filter(relation -> userId.equals(relation.getUser().getUserToken()))
+                .findFirst()
+                .map(UserToCourse::getPercentageOfCompletion)
+                .orElse(0);
     }
 }

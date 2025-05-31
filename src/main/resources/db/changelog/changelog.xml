@@ -43,7 +43,7 @@
             </column>
             <column name="achievement_id" type="int">
             </column>
-            <column name="order" type="int">
+            <column name="module_order" type="int">
             </column>
         </createTable>
     </changeSet>

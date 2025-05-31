@@ -27,8 +27,16 @@ public class CourseController {
 
     @PostMapping(path = "/course", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<String> uploadCourse(@RequestPart("uploadCourseRq") @Valid CourseUploadRq courseUploadRq,
-                                               @RequestPart("photo") MultipartFile photo,
+                                               @RequestPart("image") MultipartFile photo,
                                                @RequestHeader String rqUid){
         return uploadCourseService.upload(courseUploadRq, photo, rqUid);
     }
 }
+// todo
+// загрузка тегов
+// загрузка ачивок
+// обновление текущего курса
+// обновление модуля
+// отбивка о прохождении модуля
+// расчет completion percentage -> достать пройденные модули -> пройденные/все модули курса
+// отбивка о прохождении курса

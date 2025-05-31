@@ -60,6 +60,7 @@ public class UploadCourseService {
     private Course buildCourse(CourseUploadRq courseUploadRq, String linkToPhoto){
         return Course.builder()
                 .name(courseUploadRq.getName())
+                .description(courseUploadRq.getDescription())
                 .tags(tagConverter(courseUploadRq.getTags()))
                 .linkToPhoto(linkToPhoto)
                 .build();

@@ -43,6 +43,6 @@ public class ModuleCourse {
     @JoinColumn(name = "achievement_id")
     Achievement achievement;
 
-    @Column(name = "order", nullable = false)
-    Integer order;
+    @Column(name = "module_order", nullable = false)
+    Integer moduleOrder;
 }
