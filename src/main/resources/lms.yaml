@@ -10,7 +10,7 @@ paths:
     post:
       tags:
         - user
-      description: Добавление пользователя в БД
+      summary: Добавление пользователя в БД
       parameters:
         - name: rqUid
           in: header
@@ -40,7 +40,7 @@ paths:
     get:
       tags:
         - user
-      description: Получение наград пользователя по userId из базы данных
+      summary: Получение наград пользователя по userId из базы данных
       parameters:
         - name: userId
           in: path
@@ -50,7 +50,7 @@ paths:
             type: string
       responses:
         '200':
-          description: successful operation
+          description: Получены достижения пользователя
           content:
             application/json:
               schema:
@@ -61,6 +61,110 @@ paths:
           description: Запрос не прошел валидацию
         '404':
           description: Пользователь не был найден в базе данных
+        '500':
+          description: Внутренняя ошибка сервера
+  /get-course:
+    post:
+      tags:
+        - course
+      summary: Получение курсов с фильтрацией и пагинацией
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseGetRq'
+      responses:
+        '200':
+          description: Курсы получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseGetRs'
+        '204':
+          description: Курсы отсутствуют у пользователя(актуально, если фильтрация по пользователю)
+        '400':
+          description: Запрос не прошел валидацию
+        '500':
+          description: Внутренняя ошибка сервера
+  /course:
+    post:
+      tags:
+        - course
+      summary: Загрузка карточки курса (с картинкой)
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                uploadCourseRq:
+                  $ref: '#/components/schemas/CourseUploadRq'
+                image:
+                  type: string
+                  format: binary
+                  description: Course image file
+      responses:
+        '200':
+          description: Карточка курса загружена успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseUploadRs'
+        '400':
+          description: Запрос не прошел валидацию
+        '409':
+          description: Данный курс уже есть на платформе
+        '500':
+          description: Внутренняя ошибка сервера
+  /module:
+    post:
+      tags:
+        - modules
+      summary: Загрузка модуля с видеоконтентом
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                moduleUploadRq:
+                  $ref: '#/components/schemas/ModuleUploadRq'
+                video:
+                  type: string
+                  format: binary
+                  description: Module video file
+      responses:
+        '200':
+          description: Модуль загружен успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModuleUploadRs'
+        '400':
+          description: Запрос не прошел валидацию
+        '409':
+          description: Данный модуль уже есть на платформе (нужно тут ограничить поиск в рамках курса, сейчас проверка по имени по всей бд)
         '500':
           description: Внутренняя ошибка сервера
 components:
@@ -107,4 +211,106 @@ components:
               - score
               - name
               - id
-
+    CourseGetRq:
+      type: object
+      required:
+        - courseGetFiltersRq
+        - paginationRq
+      properties:
+        courseGetFiltersRq:
+          $ref: '#/components/schemas/CourseGetFiltersRq'
+        paginationRq:
+          $ref: '#/components/schemas/PaginationRq'
+    CourseGetFiltersRq:
+      type: object
+      properties:
+        userId:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+    CourseGetRs:
+      type: object
+      properties:
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
+        paginationRq:
+          $ref: '#/components/schemas/PaginationRq'
+    PaginationRq:
+      type: object
+      required:
+        - keySet
+        - limit
+      properties:
+        keySet:
+          type: integer
+          format: int64
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          maximum: 1
+    Course:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        completion_percentage:
+          type: integer
+          format: int32
+          nullable: true
+    CourseUploadRq:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+    CourseUploadRs:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    ModuleUploadRq:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        courseId:
+          type: integer
+          format: int64
+          description: ID of the course this module belongs to
+        moduleOrder:
+          type: integer
+          format: int32
+          description: Order of the module within the course
+      required:
+        - name
+        - courseId
+        - moduleOrder
+    ModuleUploadRs:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID of the created module
