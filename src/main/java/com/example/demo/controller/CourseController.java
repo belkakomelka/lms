@@ -18,22 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class CourseController {
     private final GetCourseService getCourseService;
-    private final UploadCourseService uploadCourseService;
     @PostMapping("/get-course")
     public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
                                                @RequestHeader String rqUid){
         return getCourseService.getCourse(courseGetRq, rqUid);
     }
-
-    @PostMapping(path = "/course", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<String> uploadCourse(@RequestPart("uploadCourseRq") @Valid CourseUploadRq courseUploadRq,
-                                               @RequestPart("image") MultipartFile photo,
-                                               @RequestHeader String rqUid){
-        return uploadCourseService.upload(courseUploadRq, photo, rqUid);
-    }
 }
 // todo
-// загрузка тегов
 // загрузка ачивок
 // получить все ачивки
 // получить выполненные ачивки

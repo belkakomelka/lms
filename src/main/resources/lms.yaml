@@ -93,10 +93,10 @@ paths:
           description: Запрос не прошел валидацию
         '500':
           description: Внутренняя ошибка сервера
-  /course:
+  /upload/course:
     post:
       tags:
-        - course
+        - upload
       summary: Загрузка карточки курса (с картинкой)
       parameters:
         - name: rqUid
@@ -130,10 +130,10 @@ paths:
           description: Данный курс уже есть на платформе
         '500':
           description: Внутренняя ошибка сервера
-  /module:
+  /upload/module:
     post:
       tags:
-        - modules
+        - upload
       summary: Загрузка модуля с видеоконтентом
       parameters:
         - name: rqUid
@@ -165,6 +165,36 @@ paths:
           description: Запрос не прошел валидацию
         '409':
           description: Данный модуль уже есть на платформе (нужно тут ограничить поиск в рамках курса, сейчас проверка по имени по всей бд)
+        '500':
+          description: Внутренняя ошибка сервера
+  /upload/tags:
+    post:
+      tags:
+        - upload
+      summary: Загрузка тегов
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagUploadRq'
+      responses:
+        '200':
+          description: Тег загружен успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagUploadRs'
+        '400':
+          description: Запрос не прошел валидацию
+        '409':
+          description: Данный тег уже есть на платформе
         '500':
           description: Внутренняя ошибка сервера
 components:
@@ -298,11 +328,11 @@ components:
         courseId:
           type: integer
           format: int64
-          description: ID of the course this module belongs to
+          description: id курса, которому принадлежит модуль
         moduleOrder:
           type: integer
           format: int32
-          description: Order of the module within the course
+          description: Порядок модуля в курсе
       required:
         - name
         - courseId
@@ -313,4 +343,17 @@ components:
         id:
           type: integer
           format: int64
-          description: ID of the created module
+          description: id, созданного модуля
+    TagUploadRq:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+    TagUploadRs:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: id, созданного тега
