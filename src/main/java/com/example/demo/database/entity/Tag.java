@@ -20,19 +20,16 @@ import java.util.Set;
 @NoArgsConstructor
 public class Tag {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_tag")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_tags")
     @SequenceGenerator(
-            name = "sequence_tag",
-            sequenceName = "sequence_tag",
+            name = "sequence_tags",
+            sequenceName = "sequence_tags",
             allocationSize = 1
     )
     Long id;
 
     @Column(name = "name", nullable = false)
     String name;
-
-    @Column(name = "code")
-    Integer code;
 
     @Builder.Default
     @ManyToMany(mappedBy = "tags")
