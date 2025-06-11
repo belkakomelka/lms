@@ -30,8 +30,10 @@ public class UserController {
 
 
     @GetMapping("/user/achievements/{userId}")
-    public ResponseEntity<String> getUser(@PathVariable("userId") String userId,
+    public ResponseEntity<String> getUserAchievements(@PathVariable("userId") String userId,
                                           @RequestHeader String rqUid) {
-        return getUserInfoService.getUserAchievements(userId, rqUid);
+        return getUserInfoService.getUserAchievements(userId, rqUid);// todo  может сюда вынести получение курсов пользователя
     }
+
+
 }

@@ -1,15 +1,9 @@
 package com.example.demo.service.module;
 
-import com.example.demo.database.entity.Course;
 import com.example.demo.database.entity.ModuleCourse;
-import com.example.demo.database.entity.Tag;
-import com.example.demo.database.repository.CourseRepository;
 import com.example.demo.database.repository.ModuleRepository;
-import com.example.demo.database.repository.TagRepository;
-import com.example.demo.dto.course.CourseUploadRq;
-import com.example.demo.dto.course.CourseUploadRs;
+import com.example.demo.dto.UploadRs;
 import com.example.demo.dto.module.ModuleUploadRq;
-import com.example.demo.dto.module.ModuleUploadRs;
 import com.example.demo.service.minio.FileUploadService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -68,8 +60,8 @@ public class UploadModuleService {
                 .build();
     }
 
-    private ModuleUploadRs buildRs(ModuleCourse moduleCourse){
-        return ModuleUploadRs.builder()
+    private UploadRs buildRs(ModuleCourse moduleCourse){
+        return UploadRs.builder()
                 .id(moduleCourse.getId())
                 .build();
     }

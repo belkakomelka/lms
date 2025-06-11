@@ -28,8 +28,8 @@ public class Achievement {
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "score")
-    Long score;
+    @Column(name = "link_to_photo")
+    String linkToPhoto;
 
     @Builder.Default
     @OneToMany(mappedBy = "achievement")

@@ -24,6 +24,5 @@ public class UserGetAchievementsRs extends BaseGetRs {
     public static class Achievements{
         Long id;
         String name;
-        Long score;
     }
 }

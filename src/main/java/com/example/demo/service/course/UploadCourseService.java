@@ -4,8 +4,8 @@ import com.example.demo.database.entity.Course;
 import com.example.demo.database.entity.Tag;
 import com.example.demo.database.repository.CourseRepository;
 import com.example.demo.database.repository.TagRepository;
+import com.example.demo.dto.UploadRs;
 import com.example.demo.dto.course.CourseUploadRq;
-import com.example.demo.dto.course.CourseUploadRs;
 import com.example.demo.service.minio.FileUploadService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -84,8 +84,8 @@ public class UploadCourseService {
         return tags;
     }
 
-    private CourseUploadRs buildRs(Course course){
-        return CourseUploadRs.builder()
+    private UploadRs buildRs(Course course){
+        return UploadRs.builder()
                 .id(course.getId())
                 .build();
     }

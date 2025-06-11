@@ -1,26 +1,18 @@
 package com.example.demo.service.tag;
 
-import com.example.demo.database.entity.Course;
 import com.example.demo.database.entity.Tag;
-import com.example.demo.database.repository.CourseRepository;
 import com.example.demo.database.repository.TagRepository;
-import com.example.demo.dto.course.CourseUploadRq;
-import com.example.demo.dto.course.CourseUploadRs;
+import com.example.demo.dto.UploadRs;
 import com.example.demo.dto.tag.TagUploadRq;
-import com.example.demo.dto.tag.TagUploadRs;
 import com.example.demo.exception.DuplicateException;
-import com.example.demo.service.minio.FileUploadService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -57,8 +49,8 @@ public class UploadTagService {
         }
     }
 
-    private TagUploadRs buildRs(Tag tag){
-        return TagUploadRs.builder()
+    private UploadRs buildRs(Tag tag){
+        return UploadRs.builder()
                 .id(tag.getId())
                 .build();
     }

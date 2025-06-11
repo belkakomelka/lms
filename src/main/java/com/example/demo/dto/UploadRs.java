@@ -1,13 +1,13 @@
-package com.example.demo.dto.module;
+package com.example.demo.dto;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ModuleUploadRs {
+public class UploadRs {
     Long id;
 }

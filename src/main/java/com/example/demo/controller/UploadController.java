@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.achievement.AchievementUploadRq;
 import com.example.demo.dto.course.CourseUploadRq;
 import com.example.demo.dto.module.ModuleUploadRq;
 import com.example.demo.dto.tag.TagUploadRq;
+import com.example.demo.service.achievements.UploadAchievementsService;
 import com.example.demo.service.course.UploadCourseService;
 import com.example.demo.service.module.UploadModuleService;
 import com.example.demo.service.tag.UploadTagService;
@@ -22,6 +24,7 @@ public class UploadController {
     private final UploadTagService uploadTagService;
     private final UploadModuleService uploadModuleService;
     private final UploadCourseService uploadCourseService;
+    private final UploadAchievementsService uploadAchievementsService;
     @PostMapping(path = "/tag")
     public ResponseEntity<String> uploadTag(@RequestBody @Valid TagUploadRq tagUploadRq,
                                                @RequestHeader String rqUid){
@@ -39,6 +42,13 @@ public class UploadController {
     public ResponseEntity<String> uploadCourse(@RequestPart("uploadCourseRq") @Valid CourseUploadRq courseUploadRq,
                                                @RequestPart("image") MultipartFile photo,
                                                @RequestHeader String rqUid){
-        return uploadCourseService.upload(courseUploadRq, photo, rqUid); // когда загружают курс провреять не было ли такого тега и просто маппить с ним todo
+        return uploadCourseService.upload(courseUploadRq, photo, rqUid); //todo когда загружают курс провреять не было ли такого тега и просто маппить с ним
+    }
+
+    @PostMapping(path = "/achievement", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<String> uploadAchievement(@RequestPart("uploadAchievementRq") @Valid AchievementUploadRq achievementUploadRq,
+                                               @RequestPart("image") MultipartFile photo,
+                                               @RequestHeader String rqUid){
+        return uploadAchievementsService.upload(achievementUploadRq, photo, rqUid);
     }
 }

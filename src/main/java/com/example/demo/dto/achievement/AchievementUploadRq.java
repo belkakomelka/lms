@@ -1,15 +1,13 @@
-package com.example.demo.dto.course;
+package com.example.demo.dto.achievement;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CourseUploadRs {
-    Long id;
+public class AchievementUploadRq {
+    String name;
 }

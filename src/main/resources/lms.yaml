@@ -123,7 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseUploadRs'
+                $ref: '#/components/schemas/UploadRs'
         '400':
           description: Запрос не прошел валидацию
         '409':
@@ -160,7 +160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ModuleUploadRs'
+                $ref: '#/components/schemas/UploadRs'
         '400':
           description: Запрос не прошел валидацию
         '409':
@@ -190,7 +190,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TagUploadRs'
+                $ref: '#/components/schemas/UploadRs'
         '400':
           description: Запрос не прошел валидацию
         '409':
@@ -227,9 +227,6 @@ components:
           items:
             type: object
             properties:
-              score:
-                type: integer
-                example: 100
               name:
                 type: string
                 example: Прошел курс лабубу
@@ -238,7 +235,6 @@ components:
                 format: int64
                 example: 123
             required:
-              - score
               - name
               - id
     CourseGetRq:
@@ -312,12 +308,6 @@ components:
           items:
             type: string
           nullable: true
-    CourseUploadRs:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
     ModuleUploadRq:
       type: object
       properties:
@@ -337,7 +327,7 @@ components:
         - name
         - courseId
         - moduleOrder
-    ModuleUploadRs:
+    UploadRs:
       type: object
       properties:
         id:
@@ -350,10 +340,3 @@ components:
         name:
           type: string
           nullable: true
-    TagUploadRs:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: id, созданного тега

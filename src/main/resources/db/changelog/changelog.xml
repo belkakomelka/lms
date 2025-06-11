@@ -24,6 +24,7 @@
             </column>
             <column name="achievement_id" type="int">
             </column>
+            <column name="link_to_photo" type="text" />
         </createTable>
     </changeSet>
 
@@ -71,9 +72,7 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="score" type="int">
-                <constraints nullable="true" />
-            </column>
+            <column name="link_to_photo" type="text" />
         </createTable>
     </changeSet>
 
@@ -219,12 +218,6 @@
 
     <changeSet id="lms-24" author="kamilya">
         <createSequence sequenceName="sequence_users_to_course" startValue="1"/>
-    </changeSet>
-    
-    <changeSet id="lms-25" author="kamilya">
-        <addColumn tableName="course">
-            <column name="link_to_photo" type="text" />
-        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

@@ -67,7 +67,6 @@ public class GetUserInfoService {
         return UserGetAchievementsRs.Achievements.builder()
                 .id(achievement.getId())
                 .name(achievement.getName())
-                .score(achievement.getScore())
                 .build();
     }
 }
