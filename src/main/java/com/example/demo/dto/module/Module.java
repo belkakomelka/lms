@@ -1,29 +1,26 @@
-package com.example.demo.dto.course;
+package com.example.demo.dto.module;
 
-import com.example.demo.database.entity.Achievement;
+import com.example.demo.dto.achievement.Achievement;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Course {
+public class Module {
     Long id;
+
+    Long courseId;
 
     String name;
 
     String description;
 
-    Set<String> tags;
-
-    Integer completion_percentage;
+    String linkToVideo;
 
     Achievement achievement;
 
-    // todo add module
+    Integer moduleOrder;
 }

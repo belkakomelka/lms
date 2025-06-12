@@ -1,6 +1,8 @@
 package com.example.demo.service.module;
 
+import com.example.demo.database.entity.Course;
 import com.example.demo.database.entity.ModuleCourse;
+import com.example.demo.database.repository.CourseRepository;
 import com.example.demo.database.repository.ModuleRepository;
 import com.example.demo.dto.UploadRs;
 import com.example.demo.dto.module.ModuleUploadRq;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class UploadModuleService {
+    private final CourseRepository courseRepository;
 
     private final ModuleRepository moduleRepository;
 
@@ -29,6 +32,12 @@ public class UploadModuleService {
     public ResponseEntity<String> upload(ModuleUploadRq moduleUploadRq, MultipartFile video, String rqUid) {
         try {
             log.info(String.format("Принят запрос для сохранения модуля, тело запроса: %s , rqUid = %s", objectMapping.writeValueAsString(moduleUploadRq), rqUid));
+
+            Optional<Course> courseOptional = courseRepository.findById(moduleUploadRq.getCourseId());
+            if (courseOptional.isEmpty()){
+                log.info(String.format("Данного курса %d нет на платформе, в начале зарегистрируйте курс, rqUid = %s", moduleUploadRq.getCourseId(), rqUid));
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             Optional<ModuleCourse> moduleCourseOptional = moduleRepository.findByName(moduleUploadRq.getName());
             ModuleCourse moduleCourse;
             if (moduleCourseOptional.isPresent()){
@@ -38,7 +47,7 @@ public class UploadModuleService {
                 log.info(String.format("Данный модуль новый, rqUid = %s", rqUid));
                 String linkToVideo = fileUploadService.uploadVideo(video);
                 log.info(String.format("Происходит создание модуля, rqUid = %s", rqUid));
-                moduleCourse = buildModule(moduleUploadRq, linkToVideo);
+                moduleCourse = buildModule(moduleUploadRq, linkToVideo, courseOptional.get());
                 moduleRepository.save(moduleCourse);
                 log.info(String.format("Модуль сохранен, rqUid = %s", rqUid));
             }
@@ -51,9 +60,10 @@ public class UploadModuleService {
         }
     }
 
-    private ModuleCourse buildModule(ModuleUploadRq moduleUploadRq, String linkToVideo){
+    private ModuleCourse buildModule(ModuleUploadRq moduleUploadRq, String linkToVideo, Course course){
         return ModuleCourse.builder()
                 .name(moduleUploadRq.getName())
+                .course(course)
                 .moduleOrder(moduleUploadRq.getModuleOrder())
                 .linkToVideo(linkToVideo)
                 .description(moduleUploadRq.getDescription())

@@ -25,4 +25,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             @Param("tags") Set<String> tags);
 
     Optional<Course> findByName(String name);
+
+    Optional<Course> findById(Long id);
 }

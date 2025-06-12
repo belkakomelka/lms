@@ -1,5 +1,6 @@
 package com.example.demo.dto.module;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,9 @@ public class ModuleUploadRq {
 
     String description;
 
-    Long courseId; // курс, которому принадлежит модуль
+    @NotNull
+    Long courseId;       // курс, которому принадлежит модуль
 
+    @NotNull
     Integer moduleOrder; //  порядок модуля в курсе
 }

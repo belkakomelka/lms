@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.course.CourseGetRq;
+import com.example.demo.dto.module.ModuleGetRq;
 import com.example.demo.service.achievements.GetAchievementsService;
 import com.example.demo.service.course.GetCourseService;
+import com.example.demo.service.module.GetModuleService;
 import com.example.demo.service.tag.GetTagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class GetController {
     private final GetCourseService getCourseService;
     private final GetTagService getTagService;
     private final GetAchievementsService getAchievementsService;
+    private final GetModuleService getModuleService;
 
     @PostMapping("/get-course")
     public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
@@ -35,10 +38,15 @@ public class GetController {
         return getAchievementsService.getAchievements(rqUid);
     }
 
+    @PostMapping("/get-module")  // получить модуль внутри курса
+    public ResponseEntity<String> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
+                                               @RequestHeader String rqUid){
+        return getModuleService.getCourse(moduleGetRq, rqUid);
+    }
+
 }
 // todo
 // отдать курс
-// отдать модуль
 
 // обновление текущего курса
 // обновление модуля
