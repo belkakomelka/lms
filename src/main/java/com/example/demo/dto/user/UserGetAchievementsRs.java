@@ -1,19 +1,19 @@
 package com.example.demo.dto.user;
 
-import com.example.demo.dto.BaseGetRs;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-public class UserGetAchievementsRs extends BaseGetRs {
+
+@Data
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class UserGetAchievementsRs{
+    Long userId;
+
     @NotNull
     String userToken;
 

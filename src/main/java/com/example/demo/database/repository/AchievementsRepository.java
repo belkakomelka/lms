@@ -2,6 +2,7 @@ package com.example.demo.database.repository;
 
 import com.example.demo.database.entity.Achievement;
 import com.example.demo.database.entity.Course;
+import com.example.demo.database.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,4 +13,6 @@ import java.util.Set;
 
 public interface AchievementsRepository extends JpaRepository<Achievement, Long> {
     Optional<Achievement> findByName(String name);
+
+    List<Achievement> findAll();
 }

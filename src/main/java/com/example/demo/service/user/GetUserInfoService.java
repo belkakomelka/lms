@@ -52,7 +52,7 @@ public class GetUserInfoService {
 
     private UserGetAchievementsRs buildRs(User user){
         return UserGetAchievementsRs.builder()
-                .id(user.getId())
+                .userId(user.getId())
                 .userToken(user.getUserToken())
                 .achievements(user
                         .getUserRelationToAchievement()

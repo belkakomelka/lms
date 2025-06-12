@@ -1,13 +1,15 @@
-package com.example.demo.dto;
+package com.example.demo.dto.tag;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 @Data
-@SuperBuilder
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class BaseGetRs {
+public class Tag{
     Long id;
+    String name;
 }

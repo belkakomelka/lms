@@ -45,7 +45,7 @@ public class GetCourseService {
                 if (courses == null || courses.isEmpty()) { // todo refactor
                     log.info(String.format("У пользователя с userId = %s нет активных курсов, rqUid = %s", filters.getUserId(), rqUid));
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                } else{
+                } else{ // todo добавить пагинацию
                     return new ResponseEntity<>(objectMapping.writeValueAsString(buildRs(courses, courseGetRq.getCourseGetFiltersRq().getUserId())), HttpStatus.OK);
                 }
             }
@@ -59,6 +59,7 @@ public class GetCourseService {
     public CourseGetRs buildRs(List<Course> courses) {
         List<com.example.demo.dto.course.Course> courseDtos = courses.stream()
                 .map(c -> com.example.demo.dto.course.Course.builder()
+                        .id(c.getId())
                         .name(c.getName())
                         .tags(mapTagNames(c.getTags()))
                         .description(c.getDescription())

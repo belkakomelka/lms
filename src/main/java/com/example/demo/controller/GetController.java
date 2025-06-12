@@ -1,33 +1,40 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.course.CourseGetRq;
-import com.example.demo.dto.course.CourseUploadRq;
 import com.example.demo.service.course.GetCourseService;
-import com.example.demo.service.course.UploadCourseService;
+import com.example.demo.service.tag.GetTagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/lms/v1")
 @Validated
-public class CourseController {
+public class GetController {
     private final GetCourseService getCourseService;
+    private final GetTagService getTagService;
+
     @PostMapping("/get-course")
     public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
                                                @RequestHeader String rqUid){
         return getCourseService.getCourse(courseGetRq, rqUid);
     }
+
+    @GetMapping("get-tags")
+    public ResponseEntity<String> getAllTags(@RequestHeader String rqUid){
+        return getTagService.getTag(rqUid);
+    }
+
+    @GetMapping("get-achievements")
+    public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid){
+        return getTagService.getTag(rqUid);
+    }
+
 }
 // todo
-// получить все ачивки
-// получить выполненные ачивки
-
 // обновление текущего курса
 // обновление модуля
 

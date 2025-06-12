@@ -1,7 +1,7 @@
-package com.example.demo.dto.course;
+package com.example.demo.dto.tag;
 
 import com.example.demo.dto.PaginationRq;
-import jakarta.validation.constraints.NotNull;
+import com.example.demo.dto.course.Course;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CourseGetRs {
-    List<Course> courses;
-    // todo add pagination
+public class TagGetRs {
+    List<Tag> tags;
 }
