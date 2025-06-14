@@ -28,19 +28,19 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<String> addUser(@RequestBody @Valid UserRegistrationRq userRegistrationRq,
                                           @RequestHeader String rqUid) {
-        return addUserService.addUser(userRegistrationRq, rqUid);
+        return addUserService.addUser(userRegistrationRq, rqUid); // добавить пользователя в БД
     }
 
 
     @GetMapping("achievements/{userId}")
     public ResponseEntity<String> getUserAchievements(@PathVariable("userId") String userId,
-                                          @RequestHeader String rqUid) {
+                                          @RequestHeader String rqUid) { // получить ачивки пользователя
         return getUserInfoService.getUserAchievements(userId, rqUid);
     }
 
     @PostMapping("complete-module")
     public ResponseEntity<String> completeModule(@RequestBody @Valid CompleteModuleRq completeModuleRq,
                                                  @RequestHeader String rqUid) {
-        return completionService.completeModule(completeModuleRq, rqUid);
+        return completionService.completeModule(completeModuleRq, rqUid); // отметить пройденный модуль для пользователя
     }
 }

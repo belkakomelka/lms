@@ -25,20 +25,22 @@ public class GetController {
     @PostMapping("/get-course")
     public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
                                                @RequestHeader String rqUid){
+        // получить список курсов(есть фильтрация по тегам для общего меню, а еще по userId для показа курсов)
+        // todo нужно добавить по id курса отдать состав курса с модулями (это для Камили)
         return getCourseService.getCourse(courseGetRq, rqUid);
     }
 
-    @GetMapping("get-tags")
+    @GetMapping("get-tags") // получить все теги из бд
     public ResponseEntity<String> getAllTags(@RequestHeader String rqUid){
         return getTagService.getTag(rqUid);
     }
 
-    @GetMapping("get-achievements")
+    @GetMapping("get-achievements") // получить все ачивки, занесенные в бд
     public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid){
         return getAchievementsService.getAchievements(rqUid);
     }
 
-    @PostMapping("/get-module")  // получить модуль внутри курса
+    @PostMapping("/get-module")  // получить модуль внутри курса (страница показа модуля)
     public ResponseEntity<String> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
                                                @RequestHeader String rqUid){
         return getModuleService.getCourse(moduleGetRq, rqUid);
