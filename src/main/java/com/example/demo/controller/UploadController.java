@@ -35,7 +35,7 @@ public class UploadController {
     public ResponseEntity<String> uploadModule(@RequestPart("moduleUploadRq") @Valid ModuleUploadRq moduleUploadRq,
                                                @RequestPart("video") MultipartFile video,
                                                @RequestHeader String rqUid){
-        return uploadModuleService.upload(moduleUploadRq, video, rqUid);
+        return uploadModuleService.upload(moduleUploadRq, video, rqUid); // todo отдать мультипартом Владу
     }
 
     @PostMapping(path = "/course", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface ModuleRepository extends JpaRepository<ModuleCourse, Long> {
     Optional<ModuleCourse> findByName(String name);
 
+    Optional<ModuleCourse> findById(Long id);
+
     List<ModuleCourse> findByCourseIdOrderByModuleOrderAsc(Long courseId);
 }
