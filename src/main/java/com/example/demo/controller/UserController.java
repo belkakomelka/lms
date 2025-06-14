@@ -42,5 +42,6 @@ public class UserController {
     public ResponseEntity<String> completeModule(@RequestBody @Valid CompleteModuleRq completeModuleRq,
                                                  @RequestHeader String rqUid) {
         return completionService.completeModule(completeModuleRq, rqUid); // отметить пройденный модуль для пользователя
+        // (вызывается при нажатии кнопки гоу некст модуль)
     }
 }
