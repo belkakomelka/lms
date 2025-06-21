@@ -36,7 +36,7 @@ public class UploadController {
                                                @RequestPart("video") MultipartFile video,
                                                @RequestHeader String rqUid){
         // загрузить модуль
-        return uploadModuleService.upload(moduleUploadRq, video, rqUid); // todo отдать мультипартом Владу
+        return uploadModuleService.upload(moduleUploadRq, video, rqUid);
     }
 
     @PostMapping(path = "/course", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

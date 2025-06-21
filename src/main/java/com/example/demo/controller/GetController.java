@@ -2,13 +2,16 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.course.CourseGetRq;
 import com.example.demo.dto.module.ModuleGetRq;
+import com.example.demo.dto.module.ModulesGetRq;
 import com.example.demo.service.achievements.GetAchievementsService;
 import com.example.demo.service.course.GetCourseService;
 import com.example.demo.service.module.GetModuleService;
 import com.example.demo.service.tag.GetTagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +29,6 @@ public class GetController {
     public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
                                                @RequestHeader String rqUid){
         // получить список курсов(есть фильтрация по тегам для общего меню, а еще по userId для показа курсов)
-        // todo нужно добавить по id курса отдать состав курса с модулями (это для Камили)
         return getCourseService.getCourse(courseGetRq, rqUid);
     }
 
@@ -40,10 +42,16 @@ public class GetController {
         return getAchievementsService.getAchievements(rqUid);
     }
 
-    @PostMapping("/get-module")  // получить модуль внутри курса (страница показа модуля)
-    public ResponseEntity<String> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
-                                               @RequestHeader String rqUid){
-        return getModuleService.getCourse(moduleGetRq, rqUid);
+    @PostMapping("/get-modules")  // получить список модулей внутри курса
+    public ResponseEntity<String> getModules(@RequestBody @Valid ModulesGetRq modulesGetRq,
+                                            @RequestHeader String rqUid){
+        return getModuleService.getModules(modulesGetRq, rqUid);
+    }
+
+    @PostMapping(value = "/get-module", produces = MediaType.MULTIPART_FORM_DATA_VALUE)  // получить модуль для демонстрации с контентом
+    public ResponseEntity<MultiValueMap<String, Object>> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
+                                                                   @RequestHeader String rqUid){
+        return getModuleService.getModule(moduleGetRq, rqUid);
     }
 
 }
