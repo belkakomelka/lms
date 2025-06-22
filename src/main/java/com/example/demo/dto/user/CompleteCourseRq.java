@@ -9,10 +9,10 @@ import lombok.experimental.FieldDefaults;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CompleteModuleRq {
+public class CompleteCourseRq {
     @NotNull
     String userId;
 
     @NotNull
-    Long moduleId;
+    Long courseId;
 }

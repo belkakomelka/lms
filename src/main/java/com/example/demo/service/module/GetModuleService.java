@@ -12,15 +12,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,16 +59,43 @@ public class GetModuleService {
                 log.info(String.format("Данного модуля нет в базе, id = %s, rqUid = %s", moduleGetRq.getModuleId(), rqUid));
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
+
+            InputStream videoStream = fileGetService.getContent(module.get().getLinkToVideo());
+            byte[] videoBytes = videoStream.readAllBytes();
+            String fileName = Paths.get(module.get().getLinkToVideo()).getFileName().toString();
+            String contentType = Files.probeContentType(Paths.get(fileName));
+            if (contentType == null) contentType = "video/mp4";
+
+            // Видео как ресурс
+            ByteArrayResource videoResource = new ByteArrayResource(videoBytes) {
+                @Override
+                public String getFilename() {
+                    return fileName;
+                }
+            };
+
+            HttpHeaders videoPartHeaders = new HttpHeaders();
+            videoPartHeaders.setContentDisposition(
+                    ContentDisposition.builder("inline").name("video").filename(fileName).build()
+            );
+            videoPartHeaders.setContentType(MediaType.parseMediaType(contentType));
+            HttpEntity<ByteArrayResource> videoPart = new HttpEntity<>(videoResource, videoPartHeaders);
+
+            HttpHeaders jsonPartHeaders = new HttpHeaders();
+            jsonPartHeaders.setContentDisposition(
+                    ContentDisposition.builder("inline").name("moduleInfo").build()
+            );
+            jsonPartHeaders.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Object> moduleInfoPart = new HttpEntity<>(buildModule(module.get()), jsonPartHeaders);
+
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            InputStream content = fileGetService.getContent(module.get().getLinkToVideo());
+            body.add("moduleInfo", moduleInfoPart);
+            body.add("video", videoPart);
 
-            body.set("moduleInfo", buildModule(module.get()));
-            body.set("video", content);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.setContentType(MediaType.MULTIPART_MIXED);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-            return new ResponseEntity<>(body, headers,HttpStatus.OK);
+            return new ResponseEntity<>(body, responseHeaders, HttpStatus.OK);
         } catch (JsonProcessingException e){
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -48,7 +48,7 @@ public class GetController {
         return getModuleService.getModules(modulesGetRq, rqUid);
     }
 
-    @PostMapping(value = "/get-module", produces = MediaType.MULTIPART_FORM_DATA_VALUE)  // получить модуль для демонстрации с контентом
+    @PostMapping(value = "/get-module", produces = MediaType.MULTIPART_MIXED_VALUE)  // получить модуль для демонстрации с контентом
     public ResponseEntity<MultiValueMap<String, Object>> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
                                                                    @RequestHeader String rqUid){
         return getModuleService.getModule(moduleGetRq, rqUid);
@@ -56,7 +56,6 @@ public class GetController {
 
 }
 // todo
-// отдать курс
 
 // обновление текущего курса
 // обновление модуля

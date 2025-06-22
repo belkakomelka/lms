@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.course.CourseGetRq;
+import com.example.demo.dto.user.CompleteCourseRq;
 import com.example.demo.dto.user.CompleteModuleRq;
 import com.example.demo.dto.user.UserGetRq;
 import com.example.demo.dto.user.UserRegistrationRq;
@@ -43,5 +44,12 @@ public class UserController {
                                                  @RequestHeader String rqUid) {
         return completionService.completeModule(completeModuleRq, rqUid); // отметить пройденный модуль для пользователя
         // (вызывается при нажатии кнопки гоу некст модуль)
+    }
+
+    @PostMapping("complete-course")
+    public ResponseEntity<String> completeCourse(@RequestBody @Valid CompleteCourseRq completeCourseRq,
+                                                 @RequestHeader String rqUid) {
+        return completionService.completeCourse(completeCourseRq, rqUid); // отметить пройденный курс для пользователя
+        // (вызывается при нажатии кнопки завершить модуль)
     }
 }
