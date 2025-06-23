@@ -11,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class Achievement {
     Long id;
     String name;
-    String linkToPhoto; // todo уточнить у влада отдавать ли ему тут мультипарт сразу с фото? или он сам сходит в s3
+    String image;
 }

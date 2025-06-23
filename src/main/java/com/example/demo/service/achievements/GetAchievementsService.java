@@ -7,6 +7,7 @@ import com.example.demo.database.repository.TagRepository;
 import com.example.demo.dto.achievement.AchievementsGetRs;
 import com.example.demo.dto.tag.TagGetRs;
 import com.example.demo.exception.DuplicateException;
+import com.example.demo.service.minio.FileGetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,8 @@ public class GetAchievementsService {
     private final AchievementsRepository achievementsRepository;
 
     private final ObjectMapper objectMapper;
+
+    private final FileGetService fileGetService;
 
     public ResponseEntity<String> getAchievements(String rqUid) {
         try {
@@ -43,7 +46,7 @@ public class GetAchievementsService {
                 .map(a -> com.example.demo.dto.achievement.Achievement.builder()
                         .id(a.getId())
                         .name(a.getName())
-                        .linkToPhoto(a.getLinkToPhoto())
+                        .image(fileGetService.getContent(a.getLinkToPhoto()))
                         .build()
                 ).toList();
 

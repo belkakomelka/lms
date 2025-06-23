@@ -125,13 +125,4 @@ public class CompletionService {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-    private UserToCourse buildUserToCourse(User user, Course course, Integer percentageOfCompletion){
-        return UserToCourse.builder()
-                .course(course)
-                .percentageOfCompletion(percentageOfCompletion)
-                .user(user)
-                .build();
-    }
 }

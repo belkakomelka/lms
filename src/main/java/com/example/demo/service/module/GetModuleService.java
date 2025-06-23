@@ -60,27 +60,27 @@ public class GetModuleService {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            InputStream videoStream = fileGetService.getContent(module.get().getLinkToVideo());
-            byte[] videoBytes = videoStream.readAllBytes();
-            String fileName = Paths.get(module.get().getLinkToVideo()).getFileName().toString();
-            String contentType = Files.probeContentType(Paths.get(fileName));
-            if (contentType == null) contentType = "video/mp4";
-
-            // Видео как ресурс
-            ByteArrayResource videoResource = new ByteArrayResource(videoBytes) {
-                @Override
-                public String getFilename() {
-                    return fileName;
-                }
-            };
-
-            HttpHeaders videoPartHeaders = new HttpHeaders();
-            videoPartHeaders.setContentDisposition(
-                    ContentDisposition.builder("inline").name("video").filename(fileName).build()
-            );
-            videoPartHeaders.setContentType(MediaType.parseMediaType(contentType));
-            HttpEntity<ByteArrayResource> videoPart = new HttpEntity<>(videoResource, videoPartHeaders);
-
+//            InputStream videoStream = fileGetService.getContent(module.get().getLinkToVideo());
+//            byte[] videoBytes = videoStream.readAllBytes();
+//            String fileName = Paths.get(module.get().getLinkToVideo()).getFileName().toString();
+//            String contentType = Files.probeContentType(Paths.get(fileName));
+//            if (contentType == null) contentType = "video/mp4";
+//
+//            // Видео как ресурс
+//            ByteArrayResource videoResource = new ByteArrayResource(videoBytes) {
+//                @Override
+//                public String getFilename() {
+//                    return fileName;
+//                }
+//            };
+//
+//            HttpHeaders videoPartHeaders = new HttpHeaders();
+//            videoPartHeaders.setContentDisposition(
+//                    ContentDisposition.builder("inline").name("video").filename(fileName).build()
+//            );
+//            videoPartHeaders.setContentType(MediaType.parseMediaType(contentType));
+//            HttpEntity<ByteArrayResource> videoPart = new HttpEntity<>(videoResource, videoPartHeaders);
+//
             HttpHeaders jsonPartHeaders = new HttpHeaders();
             jsonPartHeaders.setContentDisposition(
                     ContentDisposition.builder("inline").name("moduleInfo").build()
@@ -90,7 +90,7 @@ public class GetModuleService {
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("moduleInfo", moduleInfoPart);
-            body.add("video", videoPart);
+ //           body.add("video", videoPart);
 
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.setContentType(MediaType.MULTIPART_MIXED);
@@ -125,7 +125,7 @@ public class GetModuleService {
                         Achievement.builder()
                                 .id(module.getAchievement().getId())
                                 .name(module.getAchievement().getName())
-                                .linkToPhoto(module.getAchievement().getLinkToPhoto()).build() : null)
+                                .image(module.getAchievement().getLinkToPhoto()).build() : null) // todo переделать тут
                 .build();
     }
 }

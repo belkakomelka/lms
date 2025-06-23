@@ -18,8 +18,6 @@ public class Module {
 
     String description;
 
-    String linkToVideo;
-
     Achievement achievement; // ачивки для этого модуля, todo чтобы узнать есть ли она у пользователя, нужно идти в связь UserToModule
 
     Integer moduleOrder;

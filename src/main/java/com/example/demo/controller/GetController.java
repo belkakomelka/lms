@@ -15,6 +15,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+// todo
+// обновление текущего курса
+// обновление модуля
+
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/lms/v1")
@@ -39,7 +44,7 @@ public class GetController {
 
     @GetMapping("get-achievements") // получить все ачивки, занесенные в бд
     public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid){
-        return getAchievementsService.getAchievements(rqUid);
+        return getAchievementsService.getAchievements(rqUid); // todo тут с картинками
     }
 
     @PostMapping("/get-modules")  // получить список модулей внутри курса
@@ -51,11 +56,7 @@ public class GetController {
     @PostMapping(value = "/get-module", produces = MediaType.MULTIPART_MIXED_VALUE)  // получить модуль для демонстрации с контентом
     public ResponseEntity<MultiValueMap<String, Object>> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
                                                                    @RequestHeader String rqUid){
-        return getModuleService.getModule(moduleGetRq, rqUid);
+        return getModuleService.getModule(moduleGetRq, rqUid); // todo тут видео
     }
 
 }
-// todo
-// обновление текущего курса
-// обновление модуля
-// привязка человека к курсу

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserToAchievementRepository extends JpaRepository<UserToAchievement, Long> {
 
-    // todo
+    // todo добавить ачивки
 }

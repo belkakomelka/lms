@@ -24,6 +24,4 @@ public class Course {
     Integer completion_percentage;
 
     Achievement achievement;
-
-    // todo add module
 }

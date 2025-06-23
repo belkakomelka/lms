@@ -1,8 +1,14 @@
 package com.example.demo.service.minio;
 
 import io.minio.*;
+import io.minio.errors.*;
+import io.minio.http.Method;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeUnit;
 
 public class MinioStorageService {
     private final MinioClient minioClient;
@@ -53,12 +59,21 @@ public class MinioStorageService {
                         .build());
     }
 
-    public InputStream downloadFile(String objectName) throws Exception {
-        return minioClient.getObject(
-                GetObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(objectName)
-                        .build());
+    public String generatePresignedUrl(String objectKey) {
+        try {
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(bucketName)
+                            .object(objectKey)
+                            .expiry(1, TimeUnit.HOURS)
+                            .build()
+            );
+        } catch (ServerException | ErrorResponseException | IOException | InsufficientDataException |
+                 NoSuchAlgorithmException | InvalidKeyException | InvalidResponseException | XmlParserException |
+                 InternalException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteFile(String objectName) throws Exception {

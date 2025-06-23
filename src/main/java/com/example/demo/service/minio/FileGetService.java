@@ -13,7 +13,7 @@ public class FileGetService {
         this.minioStorage = minioStorage;
     }
 
-    public InputStream getContent(String fileName) throws Exception {
-         return minioStorage.downloadFile(fileName);
+    public String getContent(String fileName) {
+         return minioStorage.generatePresignedUrl(fileName);
     }
 }
