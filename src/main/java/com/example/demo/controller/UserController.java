@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.course.CourseGetRq;
-import com.example.demo.dto.user.CompleteCourseRq;
-import com.example.demo.dto.user.CompleteModuleRq;
-import com.example.demo.dto.user.UserGetRq;
-import com.example.demo.dto.user.UserRegistrationRq;
+import com.example.demo.dto.user.*;
 import com.example.demo.service.user.AddUserService;
 import com.example.demo.service.user.CompletionService;
 import com.example.demo.service.user.GetUserInfoService;
+import com.example.demo.service.user.TakeCourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,7 @@ public class UserController {
     private final AddUserService addUserService;
     private final GetUserInfoService getUserInfoService;
     private final CompletionService completionService;
+    private final TakeCourseService takeCourseService;
 
     @PostMapping("/")
     public ResponseEntity<String> addUser(@RequestBody @Valid UserRegistrationRq userRegistrationRq,
@@ -51,5 +50,11 @@ public class UserController {
                                                  @RequestHeader String rqUid) {
         return completionService.completeCourse(completeCourseRq, rqUid); // отметить пройденный курс для пользователя
         // (вызывается при нажатии кнопки завершить модуль)
+    }
+
+    @PostMapping("take-course")
+    public ResponseEntity<String> takeCourse(@RequestBody @Valid TakeCourseRq takeCourseRq,
+                                             @RequestHeader String rqUid){
+        return takeCourseService.takeCourse(takeCourseRq, rqUid);
     }
 }

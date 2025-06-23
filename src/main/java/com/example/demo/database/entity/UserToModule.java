@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"id", "isComplete"})
 public class UserToModule {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "sequence_users_to_module")

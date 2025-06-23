@@ -12,4 +12,7 @@ public interface ModuleRepository extends JpaRepository<ModuleCourse, Long> {
     Optional<ModuleCourse> findById(Long id);
 
     List<ModuleCourse> findByCourseIdOrderByModuleOrderAsc(Long courseId);
+
+    Long countByCourseId(Long courseId);
+
 }

@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"id", "percentageOfCompletion"})
 public class UserToCourse {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "sequence_users_to_course")

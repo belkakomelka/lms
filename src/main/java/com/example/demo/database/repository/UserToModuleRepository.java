@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface UserToModuleRepository extends JpaRepository<UserToModule, Long> {
 
     List<UserToModule> findByUserAndModuleCourseIn(User user, List<ModuleCourse> modules);
+    Optional<UserToModule> findByUserAndModuleCourse(User user, ModuleCourse module);
+
 }

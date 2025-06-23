@@ -20,12 +20,13 @@ import java.util.Optional;
 public class CompletionService {
 
     private final UserToModuleRepository userToModuleRepository;
-
     private final UserRepository userRepository;
     private final ModuleRepository moduleRepository;
     private final CourseRepository courseRepository;
     private final UserToCourseRepository userToCourseRepository;
 
+
+    // todo тут пока нет присваивания ачивки для пользователя
     public ResponseEntity<String> completeModule(CompleteModuleRq completeModuleRq, String rqUid){
         try {
             log.info(String.format("Принят запрос для отметки пользователя об окончании модуля с userId = %s, rqUid = %s", completeModuleRq.getUserId(), rqUid));
@@ -37,12 +38,37 @@ public class CompletionService {
                 log.info(String.format("Пользователь отсутствует или информация о модуле не найдена, rqUid = %s", rqUid));
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            userToModuleRepository.save(buildUserToModuleEntity(userOptional.get(), moduleCourseOptional.get()));
+
+            Optional<UserToCourse> userToCourseOptional = userToCourseRepository.findByUserAndCourse(userOptional.get(), moduleCourseOptional.get().getCourse());
+
+            if (userToCourseOptional.isEmpty()){
+                log.info(String.format("У пользователя нет активного курса, в начале необходимо выбрать курс, rqUid = %s", rqUid));
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            Optional<UserToModule> userToModuleOptional = userToModuleRepository.findByUserAndModuleCourse(userOptional.get(), moduleCourseOptional.get());
+            if (userToModuleOptional.isEmpty()){
+                log.info(String.format("У пользователя нет активного модуля, rqUid = %s", rqUid));
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            UserToModule userToModule = userToModuleOptional.get();
+            userToModule.setIsComplete(true);
+            userToModuleRepository.save(userToModule);
+
+            UserToCourse userToCourse = userToCourseOptional.get();
+            userToCourse.setPercentageOfCompletion(updateCompletionStage(moduleCourseOptional.get()));
+            userToCourseRepository.save(userToCourse);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
             log.error(String.format("Внутрення ошибка сервиса %s, rqUid = %s", e.getMessage(), rqUid));
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private Integer updateCompletionStage(ModuleCourse moduleCourse){
+        Long amountOfModulesInCourse = moduleRepository.countByCourseId(moduleCourse.getCourse().getId());
+        double percentage = (moduleCourse.getModuleOrder() * 100.0) / amountOfModulesInCourse;
+        return (int) Math.round(percentage);
     }
 
     public ResponseEntity<String> completeCourse(CompleteCourseRq completeCourseRq, String rqUid){
@@ -75,7 +101,7 @@ public class CompletionService {
                 return new ResponseEntity<>("Not all modules are completed", HttpStatus.BAD_REQUEST);
             }
 
-            userToCourseRepository.save(buildUserToCourse(userOptional.get(), courseOptional.get()));
+            userToCourseRepository.save(buildUserToCourse(userOptional.get(), courseOptional.get(), 100));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
             log.error(String.format("Внутрення ошибка сервиса %s, rqUid = %s", e.getMessage(), rqUid));
@@ -84,10 +110,10 @@ public class CompletionService {
     }
 
 
-    private UserToCourse buildUserToCourse(User user, Course course){
+    private UserToCourse buildUserToCourse(User user, Course course, Integer percentageOfCompletion){
         return UserToCourse.builder()
                 .course(course)
-                .percentageOfCompletion(100)
+                .percentageOfCompletion(percentageOfCompletion)
                 .user(user)
                 .build();
     }

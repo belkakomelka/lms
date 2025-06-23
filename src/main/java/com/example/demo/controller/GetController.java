@@ -29,7 +29,7 @@ public class GetController {
     public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
                                                @RequestHeader String rqUid){
         // получить список курсов(есть фильтрация по тегам для общего меню, а еще по userId для показа курсов)
-        return getCourseService.getCourse(courseGetRq, rqUid);
+        return getCourseService.getCourse(courseGetRq, rqUid); // todo тут с картинками
     }
 
     @GetMapping("get-tags") // получить все теги из бд
@@ -56,13 +56,6 @@ public class GetController {
 
 }
 // todo
-
 // обновление текущего курса
 // обновление модуля
-
-// отбивка о прохождении курса = один флаг сделать true
-// отбивка о прохождении модуля = один флаг сделать true
-
 // привязка человека к курсу
-
-// расчет completion percentage -> достать пройденные модули -> пройденные/все модули курса
