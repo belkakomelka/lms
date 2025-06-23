@@ -49,12 +49,13 @@ public class UserController {
     public ResponseEntity<String> completeCourse(@RequestBody @Valid CompleteCourseRq completeCourseRq,
                                                  @RequestHeader String rqUid) {
         return completionService.completeCourse(completeCourseRq, rqUid); // отметить пройденный курс для пользователя
-        // (вызывается при нажатии кнопки завершить модуль)
+        // (вызывается при нажатии кнопки завершить курс)
     }
 
     @PostMapping("take-course")
     public ResponseEntity<String> takeCourse(@RequestBody @Valid TakeCourseRq takeCourseRq,
                                              @RequestHeader String rqUid){
         return takeCourseService.takeCourse(takeCourseRq, rqUid);
+        // взять курс из общего пула курсов
     }
 }
