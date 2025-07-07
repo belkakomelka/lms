@@ -7,6 +7,7 @@ import com.example.demo.service.achievements.GetAchievementsService;
 import com.example.demo.service.course.GetCourseService;
 import com.example.demo.service.module.GetModuleService;
 import com.example.demo.service.tag.GetTagService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -43,7 +44,7 @@ public class GetController {
     }
 
     @GetMapping("get-achievements") // получить все ачивки, занесенные в бд
-    public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid){
+    public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid) throws JsonProcessingException {
         return getAchievementsService.getAchievements(rqUid); // todo тут с картинками
     }
 

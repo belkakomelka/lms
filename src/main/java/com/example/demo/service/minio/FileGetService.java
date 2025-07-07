@@ -1,5 +1,6 @@
 package com.example.demo.service.minio;
 
+import lombok.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
