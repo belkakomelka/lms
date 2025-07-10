@@ -5,7 +5,6 @@ import io.minio.errors.*;
 import io.minio.http.Method;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
@@ -19,12 +18,12 @@ public class MinioStorageService {
     public MinioStorageService(String endpoint, String accessKey, String secretKey, String bucketName)
             throws Exception {
         this.minioInternalClient = MinioClient.builder()
-                .endpoint("http://localhost:9000")
+                .endpoint(endpoint)
                 .credentials(accessKey, secretKey)
                 .build();
 
         this.minioExternalClient = MinioClient.builder()
-                .endpoint("http://localhost")
+                .endpoint("http://localhost:9000")
                 .credentials(accessKey, secretKey)
                 .build();
         this.bucketName = bucketName;
@@ -75,18 +74,13 @@ public class MinioStorageService {
                             .build()
             );
 
-            String url = minioInternalClient.getPresignedObjectUrl(
+            return minioInternalClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(bucketName)
                             .object(objectKey)
                             .expiry(1, TimeUnit.HOURS)
                             .build()
-            );
-
-            return url.replace(
-                    "http://minio:9000",
-                    "http:/localhost"
             );
 
         } catch (ServerException | ErrorResponseException | IOException | InsufficientDataException |
