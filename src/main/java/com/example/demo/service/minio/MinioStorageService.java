@@ -23,7 +23,7 @@ public class MinioStorageService {
                 .build();
 
         this.minioExternalClient = MinioClient.builder()
-                .endpoint("http://localhost:9000")
+                .endpoint("http://host.docker.internal:8082")
                 .credentials(accessKey, secretKey)
                 .build();
         this.bucketName = bucketName;
@@ -67,13 +67,14 @@ public class MinioStorageService {
 
     public String generatePresignedUrl(String objectKey) {
         try {
+            System.out.println("ok");
             minioInternalClient.statObject(
                     StatObjectArgs.builder()
                             .bucket(bucketName)
                             .object(objectKey)
                             .build()
             );
-
+            System.out.println("ok");
             return minioInternalClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
