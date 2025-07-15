@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -44,7 +45,36 @@ public class UploadCourseService {
                 log.info(String.format("Данный курс новый, rqUid = %s", rqUid));
                 String linkToPhoto = fileUploadService.uploadPhoto(photo);
                 log.info(String.format("Происходит создание карточки, rqUid = %s", rqUid));
+                Set<String> requestedTags = courseUploadRq.getTags();
+                Set<Tag> existingTags = new HashSet<>(tagRepository.findAll());
+                Set<String> existingTagNames = existingTags.stream()
+                        .map(Tag::getName)
+                        .collect(Collectors.toSet());
+
+                Set<String> newTagNames = requestedTags.stream()
+                        .filter(tag -> !existingTagNames.contains(tag))
+                        .collect(Collectors.toSet());
+
+                if (!newTagNames.isEmpty()) {
+                    log.info(String.format("Создаются новые теги: %s, rqUid = %s", newTagNames, rqUid));
+                    Set<Tag> newTags = newTagNames.stream()
+                            .map(tagName -> {
+                                Tag newTag = new Tag();
+                                newTag.setName(tagName);
+                                return tagRepository.save(newTag);
+                            })
+                            .collect(Collectors.toSet());
+
+                    existingTags.addAll(newTags);
+                }
+
                 course = buildCourse(courseUploadRq, linkToPhoto);
+
+                Set<Tag> tagsForCourse = existingTags.stream()
+                        .filter(tag -> requestedTags.contains(tag.getName()))
+                        .collect(Collectors.toSet());
+
+                course.setTags(tagsForCourse);
                 courseRepository.save(course);
                 log.info(String.format("Карточка курса сохранена, rqUid = %s", rqUid));
             }
@@ -61,27 +91,8 @@ public class UploadCourseService {
         return Course.builder()
                 .name(courseUploadRq.getName())
                 .description(courseUploadRq.getDescription())
-                .tags(tagConverter(courseUploadRq.getTags()))
                 .linkToPhoto(linkToPhoto)
                 .build();
-    }
-
-
-    private Set<Tag> tagConverter(Set<String> tagNames){
-        Set<Tag> tags = new HashSet<>();
-
-        if (tagNames != null) {
-            for (String tagName : tagNames) {
-                Tag tag = tagRepository.findByName(tagName)
-                        .orElseGet(() -> {
-                            Tag newTag = new Tag();
-                            newTag.setName(tagName);
-                            return tagRepository.save(newTag);
-                        });
-                tags.add(tag);
-            }
-        }
-        return tags;
     }
 
     private UploadRs buildRs(Course course){

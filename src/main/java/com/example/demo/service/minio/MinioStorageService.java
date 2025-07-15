@@ -11,19 +11,12 @@ import java.util.concurrent.TimeUnit;
 
 public class MinioStorageService {
     private final MinioClient minioInternalClient;
-
-    private final MinioClient minioExternalClient;
     private final String bucketName;
 
     public MinioStorageService(String endpoint, String accessKey, String secretKey, String bucketName)
             throws Exception {
         this.minioInternalClient = MinioClient.builder()
                 .endpoint(endpoint)
-                .credentials(accessKey, secretKey)
-                .build();
-
-        this.minioExternalClient = MinioClient.builder()
-                .endpoint("http://host.docker.internal:8082")
                 .credentials(accessKey, secretKey)
                 .build();
         this.bucketName = bucketName;
@@ -67,15 +60,7 @@ public class MinioStorageService {
 
     public String generatePresignedUrl(String objectKey) {
         try {
-            System.out.println("ok");
-            minioInternalClient.statObject(
-                    StatObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(objectKey)
-                            .build()
-            );
-            System.out.println("ok");
-            return minioInternalClient.getPresignedObjectUrl(
+            String presignedUrl = minioInternalClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(bucketName)
@@ -83,6 +68,7 @@ public class MinioStorageService {
                             .expiry(1, TimeUnit.HOURS)
                             .build()
             );
+            return presignedUrl.replace("minio:9000", "localhost:8082"); // todo потом вынести в конфиг
 
         } catch (ServerException | ErrorResponseException | IOException | InsufficientDataException |
                  NoSuchAlgorithmException | InvalidKeyException | InvalidResponseException | XmlParserException |

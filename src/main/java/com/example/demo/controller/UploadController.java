@@ -25,7 +25,7 @@ public class UploadController {
     private final UploadModuleService uploadModuleService;
     private final UploadCourseService uploadCourseService;
     private final UploadAchievementsService uploadAchievementsService;
-    @PostMapping(path = "/tag") // загрузить тег
+    @PostMapping(path = "/tag")
     public ResponseEntity<String> uploadTag(@RequestBody @Valid TagUploadRq tagUploadRq,
                                                @RequestHeader String rqUid){
         return uploadTagService.upload(tagUploadRq, rqUid);
@@ -35,18 +35,17 @@ public class UploadController {
     public ResponseEntity<String> uploadModule(@RequestPart("moduleUploadRq") @Valid ModuleUploadRq moduleUploadRq,
                                                @RequestPart("video") MultipartFile video,
                                                @RequestHeader String rqUid){
-        // загрузить модуль
         return uploadModuleService.upload(moduleUploadRq, video, rqUid);
     }
 
     @PostMapping(path = "/course", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<String> uploadCourse(@RequestPart("uploadCourseRq") @Valid CourseUploadRq courseUploadRq,
                                                @RequestPart("image") MultipartFile photo,
-                                               @RequestHeader String rqUid){ // загрузить курс
-        return uploadCourseService.upload(courseUploadRq, photo, rqUid); //todo когда загружают курс провреять не было ли такого тега и просто маппить с ним
+                                               @RequestHeader String rqUid){
+        return uploadCourseService.upload(courseUploadRq, photo, rqUid);
     }
 
-    @PostMapping(path = "/achievement", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }) // загрузить ачивку
+    @PostMapping(path = "/achievement", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<String> uploadAchievement(@RequestPart("uploadAchievementRq") @Valid AchievementUploadRq achievementUploadRq,
                                                @RequestPart("image") MultipartFile photo,
                                                @RequestHeader String rqUid){
