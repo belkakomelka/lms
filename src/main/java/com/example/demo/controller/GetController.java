@@ -34,30 +34,29 @@ public class GetController {
     @PostMapping("/get-course")
     public ResponseEntity<String> getAllCourse(@RequestBody @Valid CourseGetRq courseGetRq,
                                                @RequestHeader String rqUid){
-        // получить список курсов(есть фильтрация по тегам для общего меню, а еще по userId для показа курсов)
-        return getCourseService.getCourse(courseGetRq, rqUid); // todo тут с картинками
+        return getCourseService.getCourse(courseGetRq, rqUid);
     }
 
-    @GetMapping("get-tags") // получить все теги из бд
+    @GetMapping("get-tags")
     public ResponseEntity<String> getAllTags(@RequestHeader String rqUid){
         return getTagService.getTag(rqUid);
     }
 
-    @GetMapping("get-achievements") // получить все ачивки, занесенные в бд
+    @GetMapping("get-achievements")
     public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid) throws JsonProcessingException {
-        return getAchievementsService.getAchievements(rqUid); // todo тут с картинками
+        return getAchievementsService.getAchievements(rqUid);
     }
 
-    @PostMapping("/get-modules")  // получить список модулей внутри курса
+    @PostMapping("/get-modules")
     public ResponseEntity<String> getModules(@RequestBody @Valid ModulesGetRq modulesGetRq,
                                             @RequestHeader String rqUid){
         return getModuleService.getModules(modulesGetRq, rqUid);
     }
 
-    @PostMapping(value = "/get-module", produces = MediaType.MULTIPART_MIXED_VALUE)  // получить модуль для демонстрации с контентом
-    public ResponseEntity<MultiValueMap<String, Object>> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
+    @PostMapping(value = "/get-module")
+    public ResponseEntity<String> getModule(@RequestBody @Valid ModuleGetRq moduleGetRq,
                                                                    @RequestHeader String rqUid){
-        return getModuleService.getModule(moduleGetRq, rqUid); // todo тут видео
+        return getModuleService.getModule(moduleGetRq, rqUid);
     }
 
 }

@@ -21,4 +21,6 @@ public class Module {
     Achievement achievement; // ачивки для этого модуля, todo чтобы узнать есть ли она у пользователя, нужно идти в связь UserToModule
 
     Integer moduleOrder;
+
+    String content;
 }

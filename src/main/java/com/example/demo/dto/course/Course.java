@@ -24,4 +24,6 @@ public class Course {
     Integer completion_percentage;
 
     Achievement achievement;
+
+    String image;
 }

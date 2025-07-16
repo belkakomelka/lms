@@ -9,6 +9,7 @@ import com.example.demo.database.repository.UserRepository;
 import com.example.demo.dto.course.CourseGetFiltersRq;
 import com.example.demo.dto.course.CourseGetRq;
 import com.example.demo.dto.course.CourseGetRs;
+import com.example.demo.service.minio.FileGetService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,8 @@ public class GetCourseService {
     private final UserRepository userRepository;
 
     private final ObjectMapper objectMapping;
+
+    private final FileGetService fileGetService;
 
     @Transactional
     public ResponseEntity<String> getCourse(CourseGetRq courseGetRq, String rqUid) {
@@ -63,6 +66,7 @@ public class GetCourseService {
                         .name(c.getName())
                         .tags(mapTagNames(c.getTags()))
                         .description(c.getDescription())
+                        .image(fileGetService.getContent(c.getLinkToPhoto()))
                         .build())
                 .collect(Collectors.toList());
 

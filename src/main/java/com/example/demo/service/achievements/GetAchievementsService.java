@@ -30,16 +30,16 @@ public class GetAchievementsService {
     private final FileGetService fileGetService;
 
     public ResponseEntity<String> getAchievements(String rqUid) throws JsonProcessingException {
-      //  try {
+        try {
             log.info("Принят запрос для получения всех доступных достижений, rqUid = {}", rqUid);
             List<Achievement> allAchievements = achievementsRepository.findAll();
             String achievementRs = objectMapper.writeValueAsString(buildRs(allAchievements));
             log.info("Отправлен ответ для получения всех доступных наград, тело ответа: {}, rqUid = {}", achievementRs, rqUid);
             return new ResponseEntity<>(achievementRs, HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.error(String.format("Награды не могут быть получены, rqUid = %s", rqUid));
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
+        } catch (Exception e) {
+            log.error(String.format("Награды не могут быть получены, rqUid = %s", rqUid));
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public AchievementsGetRs buildRs(List<Achievement> allAchievements) {

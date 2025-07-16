@@ -25,37 +25,34 @@ public class UserController {
     private final CompletionService completionService;
     private final TakeCourseService takeCourseService;
 
-    @PostMapping("/")
+    @PostMapping("/user")
     public ResponseEntity<String> addUser(@RequestBody @Valid UserRegistrationRq userRegistrationRq,
                                           @RequestHeader String rqUid) {
-        return addUserService.addUser(userRegistrationRq, rqUid); // добавить пользователя в БД
+        return addUserService.addUser(userRegistrationRq, rqUid);
     }
 
 
     @GetMapping("achievements/{userId}")
     public ResponseEntity<String> getUserAchievements(@PathVariable("userId") String userId,
-                                          @RequestHeader String rqUid) { // получить ачивки пользователя
+                                          @RequestHeader String rqUid) {
         return getUserInfoService.getUserAchievements(userId, rqUid);
     }
 
     @PostMapping("complete-module")
     public ResponseEntity<String> completeModule(@RequestBody @Valid CompleteModuleRq completeModuleRq,
                                                  @RequestHeader String rqUid) {
-        return completionService.completeModule(completeModuleRq, rqUid); // отметить пройденный модуль для пользователя
-        // (вызывается при нажатии кнопки гоу некст модуль)
+        return completionService.completeModule(completeModuleRq, rqUid);
     }
 
     @PostMapping("complete-course")
     public ResponseEntity<String> completeCourse(@RequestBody @Valid CompleteCourseRq completeCourseRq,
                                                  @RequestHeader String rqUid) {
-        return completionService.completeCourse(completeCourseRq, rqUid); // отметить пройденный курс для пользователя
-        // (вызывается при нажатии кнопки завершить курс)
+        return completionService.completeCourse(completeCourseRq, rqUid);
     }
 
     @PostMapping("take-course")
     public ResponseEntity<String> takeCourse(@RequestBody @Valid TakeCourseRq takeCourseRq,
                                              @RequestHeader String rqUid){
         return takeCourseService.takeCourse(takeCourseRq, rqUid);
-        // взять курс из общего пула курсов
     }
 }
