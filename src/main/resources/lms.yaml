@@ -6,68 +6,12 @@ info:
 servers:
   - url: 'lms/v1'
 paths:
-  /user:
-    post:
-      tags:
-        - user
-      summary: Добавление пользователя в БД
-      parameters:
-        - name: rqUid
-          in: header
-          description: ''
-          required: true
-          schema:
-            type: string
-          example: 30f14c6c1fc85cba12bfd093aa8f90e3
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserRegistrationRq"
-      responses:
-        '200':
-          description: Пользователь сохранен в базу успешно
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserGetRs"
-        '400':
-          description: Запрос не прошел валидацию
-        '500':
-          description: Внутренняя ошибка сервера
-  /user/achievements/{userId}:
-    get:
-      tags:
-        - user
-      summary: Получение наград пользователя по userId из базы данных
-      parameters:
-        - name: userId
-          in: path
-          description: userId пользователя
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Получены достижения пользователя
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserGetAchievementsRs'
-        '204':
-          description: Отсутствуют достижения пользователя
-        '400':
-          description: Запрос не прошел валидацию
-        '404':
-          description: Пользователь не был найден в базе данных
-        '500':
-          description: Внутренняя ошибка сервера
   /get-course:
     post:
       tags:
-        - course
-      summary: Получение курсов с фильтрацией и пагинацией
+        - Course
+      summary: Get courses with filters and pagination
+      operationId: getAllCourse
       parameters:
         - name: rqUid
           in: header
@@ -82,102 +26,143 @@ paths:
               $ref: '#/components/schemas/CourseGetRq'
       responses:
         '200':
-          description: Курсы получены
+          description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CourseGetRs'
         '204':
-          description: Курсы отсутствуют у пользователя(актуально, если фильтрация по пользователю)
+          description: No content (Курсы отсутствуют у пользователя; актуально, если фильтрация по пользователю)
         '400':
-          description: Запрос не прошел валидацию
+          description: Bad Request (client validation error)
         '500':
-          description: Внутренняя ошибка сервера
-  /upload/course:
-    post:
+          description: Internal Server Error
+  /get-tags:
+    get:
       tags:
-        - upload
-      summary: Загрузка карточки курса (с картинкой)
+        - Tags
+      summary: Get all available tags
+      operationId: getAllTags
       parameters:
         - name: rqUid
           in: header
           required: true
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                uploadCourseRq:
-                  $ref: '#/components/schemas/CourseUploadRq'
-                image:
-                  type: string
-                  format: binary
-                  description: Course image file
       responses:
         '200':
-          description: Карточка курса загружена успешно
+          description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadRs'
+                $ref: '#/components/schemas/TagGetRs'
         '400':
-          description: Запрос не прошел валидацию
-        '409':
-          description: Данный курс уже есть на платформе
+          description: Bad Request (invalid request)
         '500':
-          description: Внутренняя ошибка сервера
-  /upload/module:
-    post:
+          description: Internal Server Error
+  /get-achievements:
+    get:
       tags:
-        - upload
-      summary: Загрузка модуля с видеоконтентом
+        - Achievements
+      summary: Get all available achievements
+      operationId: getAllAchievements
       parameters:
         - name: rqUid
           in: header
           required: true
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                moduleUploadRq:
-                  $ref: '#/components/schemas/ModuleUploadRq'
-                video:
-                  type: string
-                  format: binary
-                  description: Module video file
+          description: Unique request identifier
       responses:
         '200':
-          description: Модуль загружен успешно
+          description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadRs'
+                $ref: '#/components/schemas/AchievementsGetRs'
+        '204':
+          description: No achievements found
         '400':
-          description: Запрос не прошел валидацию
-        '409':
-          description: Данный модуль уже есть на платформе (нужно тут ограничить поиск в рамках курса, сейчас проверка по имени по всей бд)
+          description: Bad request (invalid parameters)
         '500':
-          description: Внутренняя ошибка сервера
-  /upload/tags:
+          description: Internal server error
+  /get-modules:
     post:
       tags:
-        - upload
-      summary: Загрузка тегов
+        - Modules
+      summary: Get modules for a specific course
+      operationId: getModules
       parameters:
         - name: rqUid
           in: header
           required: true
           schema:
             type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModulesGetRq'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModuleGetRs'
+        '204':
+          description: No modules found for the course
+        '400':
+          description: Bad request (invalid parameters)
+        '500':
+          description: Internal server error
+  /get-module:
+    post:
+      tags:
+        - Modules
+      summary: Get specific module by ID
+      operationId: getModule
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModuleGetRq'
+      responses:
+        '200':
+          description: Module details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+        '204':
+          description: Module not found
+        '400':
+          description: Bad request (invalid parameters)
+        '500':
+          description: Internal server error
+  /tag:
+    post:
+      tags:
+        - Tags
+      summary: Upload a new tag
+      operationId: uploadTag
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
       requestBody:
         required: true
         content:
@@ -186,57 +171,316 @@ paths:
               $ref: '#/components/schemas/TagUploadRq'
       responses:
         '200':
-          description: Тег загружен успешно
+          description: Tag successfully uploaded
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UploadRs'
         '400':
-          description: Запрос не прошел валидацию
+          description: Bad request (invalid parameters)
+        '500':
+          description: Internal server error
+  /module:
+    post:
+      tags:
+        - Modules
+      summary: Upload a new module with video
+      operationId: uploadModule
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                moduleUploadRq:
+                  allOf:
+                    - $ref: '#/components/schemas/ModuleUploadRq'
+                  description: JSON with module data
+                video:
+                  type: string
+                  format: binary
+                  description: Video file for the module
+      responses:
+        '200':
+          description: Module successfully uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadRs'
+        '400':
+          description: Bad request (invalid parameters)
         '409':
-          description: Данный тег уже есть на платформе
+          description: Conflict (module with same order already exists)
+        '500':
+          description: Internal server error
+  /course:
+    post:
+      tags:
+        - Course
+      summary: Upload a new course with image
+      operationId: uploadCourse
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - uploadCourseRq
+                - image
+              properties:
+                uploadCourseRq:
+                  allOf:
+                    - $ref: '#/components/schemas/CourseUploadRq'
+                image:
+                  type: string
+                  format: binary
+                  description: Изображение курса (JPG)
+      responses:
+        '200':
+          description: Курс успешно загружен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadRs'
+              example:
+                id: 123
+        '400':
+          description: Неверный запрос (невалидные данные)
         '500':
           description: Внутренняя ошибка сервера
+  /achievement:
+    post:
+      tags:
+        - Achievements
+      summary: Upload a new achievement
+      operationId: uploadAchievement
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - uploadAchievementRq
+                - image
+              properties:
+                uploadAchievementRq:
+                  allOf:
+                    - $ref: '#/components/schemas/AchievementUploadRq'
+                image:
+                  type: string
+                  format: binary
+                  description: Achievement icon image (JPG recommended)
+      responses:
+        '200':
+          description: Achievement uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadRs'
+              example:
+                id: 123
+        '400':
+          description: Bad request (invalid parameters or missing data)
+        '500':
+          description: Internal server error
+  /user:
+    post:
+      tags:
+        - Users
+      summary: Register a new user
+      operationId: addUser
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationRq'
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetRs'
+        '400':
+          description: Bad request (invalid or missing parameters)
+        '500':
+          description: Internal server error
+  /achievements/{userId}:
+    get:
+      tags:
+        - Achievements
+      summary: Get achievements for a specific user
+      operationId: getUserAchievements
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the user to retrieve achievements for
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      responses:
+        '200':
+          description: Successfully retrieved user achievements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetAchievementsRs'
+        '204':
+          description: No achievements found for the user
+        '400':
+          description: Bad request (invalid parameters)
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+  /complete-module:
+    post:
+      tags:
+        - Modules
+      summary: Mark a module as completed for a user
+      operationId: completeModule
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteModuleRq'
+      responses:
+        '200':
+          description: Module successfully marked as completed
+        '400':
+          description: Bad request (invalid or missing parameters)
+        '404':
+          description: Module or user not found
+        '500':
+          description: Internal server error
+  /complete-course:
+    post:
+      tags:
+        - Course
+      summary: Mark a course as completed for a user
+      operationId: completeCourse
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteCourseRq'
+      responses:
+        '200':
+          description: Course successfully marked as completed
+        '400':
+          description: Bad request (invalid or missing parameters)
+        '404':
+          description: Course or user not found
+        '500':
+          description: Internal server error
+  /take-course:
+    post:
+      tags:
+        - Course
+      summary: Enroll a user in a course
+      operationId: takeCourse
+      parameters:
+        - name: rqUid
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Unique request identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TakeCourseRq'
+      responses:
+        '200':
+          description: Successfully enrolled in course
+        '400':
+          description: Bad request (invalid or missing parameters)
+        '404':
+          description: Course or user not found
+        '409':
+          description: Conflict (user already enrolled in course)
+        '500':
+          description: Internal server error
 components:
   schemas:
     UserRegistrationRq:
       type: object
+      required:
+        - userId
       properties:
         userId:
           type: string
-          nullable: false
-          maximum: 255
+          example: "user123"
+          description: Unique identifier for the user
+      description: User registration request data
+
     UserGetRs:
       type: object
       properties:
         id:
-          type: int64
+          type: integer
+          format: int64
           example: 1
-    UserGetAchievementsRs:
-      type: object
-      properties:
-        id:
-          type: int64
-          example: 1
-        userToken:
-          type: string
-          example: userToken1
-          maximum: 255
-        achievements:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                example: Прошел курс лабубу
-              id:
-                type: integer
-                format: int64
-                example: 123
-            required:
-              - name
-              - id
+          description: System-generated user ID
+      required:
+        - id
+      description: User registration response
     CourseGetRq:
       type: object
       required:
@@ -258,6 +502,19 @@ components:
           items:
             type: string
           nullable: true
+    PaginationRq:
+      type: object
+      properties:
+        keySet:
+          type: integer
+          format: int64
+          minimum: 0
+          example: 0
+        limit:
+          type: integer
+          format: int32
+          maximum: 1
+          example: 1
     CourseGetRs:
       type: object
       properties:
@@ -265,24 +522,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Course'
-    PaginationRq:
-      type: object
-      required:
-        - keySet
-        - limit
-      properties:
-        keySet:
-          type: integer
-          format: int64
-          minimum: 0
-        limit:
-          type: integer
-          format: int32
-          maximum: 1
     Course:
       type: object
       properties:
-        name:
+        id:
+          type: string
+        title:
           type: string
         description:
           type: string
@@ -290,51 +535,267 @@ components:
           type: array
           items:
             type: string
-        completion_percentage:
-          type: integer
-          format: int32
-          nullable: true
     CourseUploadRq:
       type: object
       properties:
         name:
           type: string
+          example: "Advanced Java Programming"
+          description: Course name
         description:
           type: string
+          example: "Learn advanced Java concepts"
+          description: Course description
         tags:
           type: array
           items:
             type: string
-          nullable: true
-    ModuleUploadRq:
+          example: ["programming", "java", "advanced"]
+          description: Course tags
+    TagGetRs:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    AchievementsGetRs:
+      type: object
+      properties:
+        achievements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Achievement'
+      description: Response containing list of achievements
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+          description: Unique achievement identifier
+        name:
+          type: string
+          example: "Fast Learner"
+          description: Achievement name
+        image:
+          type: string
+          example: "https://example.com/achievements/fast-learner.png"
+          description: URL to achievement image
+      required:
+        - id
+        - name
+        - image
+    ModulesGetRq:
+      type: object
+      required:
+        - courseId
+      properties:
+        courseId:
+          type: integer
+          format: int64
+          example: 123
+          description: ID of the course to get modules for
+      description: Request to get course modules
+
+    ModuleGetRs:
+      type: object
+      properties:
+        modules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Module'
+      description: Response containing list of course modules
+
+    Module:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: Module ID
+        courseId:
+          type: integer
+          format: int64
+          example: 123
+          description: Parent course ID
+        name:
+          type: string
+          example: "Introduction to Java"
+          description: Module name
+        description:
+          type: string
+          example: "Basic Java concepts"
+          description: Module description
+        achievement:
+          $ref: '#/components/schemas/Achievement'
+        moduleOrder:
+          type: integer
+          format: int32
+          example: 1
+          description: Module order in course
+        content:
+          type: string
+          example: "http://localhost:8082/bucket-name/photos/1749678405933-images.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=admin%2F20250715%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250715T214639Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=cd98a5e387073e0bf6d4297e2e55db08655058c12c4ff8c904e5c984669ab91e"
+          description: Ссылка на объект в s3
+      required:
+        - id
+        - courseId
+        - name
+        - moduleOrder
+    ModuleGetRq:
+      type: object
+      required:
+        - moduleId
+      properties:
+        moduleId:
+          type: integer
+          format: int64
+          example: 1
+          description: ID of the module to retrieve
+    TagUploadRq:
       type: object
       properties:
         name:
           type: string
-        description:
-          type: string
-        courseId:
-          type: integer
-          format: int64
-          description: id курса, которому принадлежит модуль
-        moduleOrder:
-          type: integer
-          format: int32
-          description: Порядок модуля в курсе
+          example: "Programming"
+          description: Name of the tag to upload
       required:
         - name
-        - courseId
-        - moduleOrder
+      description: Request to upload new tag
     UploadRs:
       type: object
       properties:
         id:
           type: integer
           format: int64
-          description: id, созданного модуля
-    TagUploadRq:
+          example: 123
+          description: ID of the uploaded tag
+      required:
+        - id
+      description: Response with ID of uploaded entity
+    ModuleUploadRq:
+      type: object
+      required:
+        - courseId
+        - moduleOrder
+      properties:
+        name:
+          type: string
+          example: "Introduction to Java"
+          description: Module name
+        description:
+          type: string
+          example: "Basic Java concepts"
+          description: Module description
+        courseId:
+          type: integer
+          format: int64
+          example: 123
+          description: ID of the parent course
+        moduleOrder:
+          type: integer
+          format: int32
+          example: 1
+          description: Order of module in course
+      description: Module upload request data
+    AchievementUploadRq:
       type: object
       properties:
         name:
           type: string
-          nullable: true
+          example: "Fast Learner"
+          description: Name of the achievement
+      required:
+        - name
+    UserGetAchievementsRs:
+      type: object
+      required:
+        - userId
+        - userToken
+        - achievements
+      properties:
+        userId:
+          type: integer
+          format: int64
+          example: 123
+          description: ID of the user
+        userToken:
+          type: string
+          example: "abc123-xyz456"
+          description: Authentication token for the user
+        achievements:
+          type: array
+          items:
+            $ref: '#/components/schemas/AchievementItem'
+          description: Set of user achievements
+    AchievementItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: Achievement ID
+        name:
+          type: string
+          example: "Fast Learner"
+          description: Achievement name
+    CompleteModuleRq:
+      type: object
+      required:
+        - userId
+        - moduleId
+      properties:
+        userId:
+          type: string
+          example: "user123"
+          description: ID of the user completing the module
+        moduleId:
+          type: integer
+          format: int64
+          example: 456
+          description: ID of the module being completed
+      description: Request to mark a module as completed
+    CompleteCourseRq:
+      type: object
+      required:
+        - userId
+        - courseId
+      properties:
+        userId:
+          type: string
+          example: "user123"
+          description: ID of the user completing the course
+        courseId:
+          type: integer
+          format: int64
+          example: 789
+          description: ID of the course being completed
+      description: Request to mark a course as completed
+    TakeCourseRq:
+      type: object
+      required:
+        - userId
+        - courseId
+      properties:
+        userId:
+          type: string
+          example: "user123"
+          description: ID of the user enrolling in the course
+        courseId:
+          type: integer
+          format: int64
+          example: 789
+          description: ID of the course to enroll in
+      description: Request to enroll a user in a course

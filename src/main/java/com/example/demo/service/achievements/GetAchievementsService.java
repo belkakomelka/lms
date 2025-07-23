@@ -29,7 +29,7 @@ public class GetAchievementsService {
 
     private final FileGetService fileGetService;
 
-    public ResponseEntity<String> getAchievements(String rqUid) throws JsonProcessingException {
+    public ResponseEntity<String> getAchievements(String rqUid){
         try {
             log.info("Принят запрос для получения всех доступных достижений, rqUid = {}", rqUid);
             List<Achievement> allAchievements = achievementsRepository.findAll();

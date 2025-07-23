@@ -43,7 +43,7 @@ public class GetController {
     }
 
     @GetMapping("get-achievements")
-    public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid) throws JsonProcessingException {
+    public ResponseEntity<String> getAllAchievements(@RequestHeader String rqUid){
         return getAchievementsService.getAchievements(rqUid);
     }
 
